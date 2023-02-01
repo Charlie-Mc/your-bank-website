@@ -6,6 +6,7 @@ import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.example.HomeController;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -35,6 +36,7 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         Logger log = getLog();
 
+        mvc(new HomeController());
         mvc(new ExampleController(ds,log));
 
         /*
