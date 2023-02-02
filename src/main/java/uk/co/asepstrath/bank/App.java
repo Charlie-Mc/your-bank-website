@@ -1,12 +1,12 @@
 package uk.co.asepstrath.bank;
 
-import uk.co.asepstrath.bank.example.ExampleController;
 import io.jooby.Jooby;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
-import uk.co.asepstrath.bank.example.HomeController;
+import uk.co.asepstrath.bank.controllers.HomeController;
+import uk.co.asepstrath.bank.controllers.UserController;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -37,7 +37,7 @@ public class App extends Jooby {
         Logger log = getLog();
 
         mvc(new HomeController());
-        mvc(new ExampleController(ds,log));
+        mvc(new UserController(ds));
 
         /*
         Finally we register our application lifecycle methods
@@ -64,13 +64,13 @@ public class App extends Jooby {
         try (Connection connection = ds.getConnection()) {
             //
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE TABLE `Example` (`Key` varchar(255),`Value` varchar(255))");
-            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('WelcomeMessage', 'Welcome to A Bank')");
+            stmt.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, balance INTEGER);");
+            stmt.execute("INSERT INTO users VALUES (1, 'Alice', 'password', 100);");
+            stmt.execute("INSERT INTO users VALUES (2, 'Bob', 'password', 100);");
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
     }
-
     /*
     This function will be called when the application shuts down
      */
