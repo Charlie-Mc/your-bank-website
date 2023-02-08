@@ -36,6 +36,10 @@ public class UserController {
             }
         } catch (SQLException e) {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
+        } finally {
+            // Close connection
+
+
         }
         model.put("accounts", accounts);
         return new ModelAndView("account.hbs", model);
@@ -59,6 +63,8 @@ public class UserController {
 
         } catch (SQLException e) {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
+        } finally {
+            // Close connection
         }
         return new ModelAndView("account.hbs", model);
 
