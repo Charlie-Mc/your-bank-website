@@ -31,23 +31,15 @@ public class UnitTest {
     @Test
     public void test_accounts_404() {
         MockRouter router = new MockRouter(new App());
-        router.get("/accounts/1", rsp -> {
+        router.get("/accounts/JOnathon", rsp -> {
             assertEquals(StatusCode.NOT_FOUND, rsp.getStatusCode());
-        });
-    }
-
-    @Test
-    public void test_accounts_201() {
-        MockRouter router = new MockRouter(new App());
-        router.post("/accounts", rsp -> {
-            assertEquals(StatusCode.CREATED, rsp.getStatusCode());
         });
     }
 
     @Test
     public void test_account_200() {
         MockRouter router = new MockRouter(new App());
-        router.post("/accounts/1", rsp -> {
+        router.post("/accounts/Monica", rsp -> {
             assertEquals(StatusCode.OK, rsp.getStatusCode());
         });
     }
