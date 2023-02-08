@@ -64,7 +64,7 @@ public class App extends Jooby {
         try (Connection connection = ds.getConnection()) {
             Statement stmt = connection.createStatement();
             // Create user table
-            stmt.execute("CREATE TABLE IF NOT EXISTS user (name VARCHAR(255), balance INT)");
+            stmt.execute("CREATE TABLE user (name VARCHAR(255), balance INT)");
 
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
