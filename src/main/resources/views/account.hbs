@@ -1,7 +1,20 @@
 <html lang="en">
 {{>headPartial.hbs}}
 <body>
-    <h1>Hey {{user.name}}</h1>
 
+{{#if accounts}}
+    {{#each accounts}}
+    <div class="account">
+        <h2>{{this.name}}</h2>
+        <p>{{this.balance}}</p>
+    </div>
+    {{/each}}
+{{/if}}
+{{#if account}}
+    <div class="account">
+        <h2>{{account.name}}</h2>
+        <p>{{account.balance}}</p>
+    </div>
+{{/if}}
 </body>
 </html>
