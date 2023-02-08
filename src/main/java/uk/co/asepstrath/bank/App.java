@@ -7,14 +7,12 @@ import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.controllers.HomeController;
 import uk.co.asepstrath.bank.controllers.UserController;
-import uk.co.asepstrath.bank.models.Account;
 
 import javax.sql.DataSource;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+
 public class App extends Jooby {
 
     {
@@ -36,7 +34,7 @@ public class App extends Jooby {
         Now we set up our controllers and their dependencies
          */
         DataSource ds = require(DataSource.class);
-        Logger log = getLog();
+        // Logger log = getLog();
 
         mvc(new HomeController());
         mvc(new UserController(ds));
@@ -44,8 +42,8 @@ public class App extends Jooby {
         /*
         Finally we register our application lifecycle methods
          */
-        onStarted(() -> onStart());
-        onStop(() -> onStop());
+        onStarted(this::onStart);
+        onStop(this::onStop);
     }
 
     public static void main(final String[] args) {
@@ -56,17 +54,10 @@ public class App extends Jooby {
     This function will be called when the application starts up,
     it should be used to ensure that the DB is properly setup
      */
-    public ArrayList<Account> dataset = new ArrayList<>();
 
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
-        dataset.add(new Account(new BigDecimal(50), "Rachel"));
-        dataset.add(new Account(new BigDecimal(100), "Monica"));
-        dataset.add(new Account(new BigDecimal(76), "Phoebe"));
-        dataset.add(new Account(new BigDecimal(23.90), "joey"));
-        dataset.add(new Account(new BigDecimal(3), "Chandler"));
-        dataset.add(new Account(new BigDecimal(54.32), "Ross"));
         // Fetch DB Source
         DataSource ds = require(DataSource.class);
         // Open Connection to DB

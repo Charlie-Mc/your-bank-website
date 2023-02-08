@@ -29,7 +29,7 @@ sonarqube-scan:
   - sleep 15s #Wait time for the report
   - curl -k -u "$SONAR_AUTH_TOKEN":"" $url -o analysis.txt
   - export status=$(cat analysis.txt | jq -r '.task.status') #Status as SUCCESS, CANCELED or FAILED
-  - export analysisId=$(cat analysis.txt | jq -r '.task.analysisId') #Get the analysis Id
+  - export analysisId=$(cat analysis.txt | jq -r '.task.analysisId') #Get the analysis ID
   - |
     if [ "$status" == "SUCCESS" ];then
       echo -e "SONAR ANALYSIS SUCCESSFUL...ANALYSING RESULTS";

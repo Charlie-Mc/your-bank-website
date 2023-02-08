@@ -2,6 +2,7 @@ package uk.co.asepstrath.bank.models;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("unused")
 public class Account {
 
     private BigDecimal balance;
@@ -18,6 +19,10 @@ public class Account {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String value) {
+        this.name = value;
     }
 
     public void deposit(BigDecimal amount) {
