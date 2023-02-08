@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UnitTest {
+class UnitTest {
     /**
      * Test the welcome route.
      * @since 1.0.0
      */
     @Test
-    public void test_home_200() {
+    void test_home_200() {
         MockRouter router = new MockRouter(new App());
         router.get("/", rsp -> assertEquals(StatusCode.OK, rsp.getStatusCode()));
     }

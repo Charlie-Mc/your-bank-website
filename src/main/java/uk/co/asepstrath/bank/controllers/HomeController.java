@@ -8,9 +8,6 @@ import java.util.HashMap;
 
 @Path("/")
 public class HomeController {
-    public HomeController() {
-    }
-
     @GET
     public ModelAndView home() {
         HashMap<String, Object> model = new HashMap<>();

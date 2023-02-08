@@ -29,9 +29,9 @@ public class Account {
         balance = balance.add(amount);
     }
 
-    public void withdraw(BigDecimal amount) throws Exception {
+    public void withdraw(BigDecimal amount) throws ArithmeticException {
         if (balance.compareTo(amount) < 0) {
-            throw new Exception("Balance to low");
+            throw new ArithmeticException("Insufficient funds");
         }
         balance = balance.subtract(amount);
     }
