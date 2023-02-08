@@ -73,6 +73,7 @@ public class App extends Jooby {
             stmt.execute("INSERT INTO users (id, name, balance) VALUES (4,'Joey', 23.90)");
             stmt.execute("INSERT INTO users (id, name, balance) VALUES (5,'Chandler', 3)");
             stmt.execute("INSERT INTO users (id, name, balance) VALUES (6,'Ross', 54.32)");
+            stmt.close();
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
