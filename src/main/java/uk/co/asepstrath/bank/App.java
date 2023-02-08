@@ -62,11 +62,10 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         // Open Connection to DB
         try (Connection connection = ds.getConnection()) {
-            //
             Statement stmt = connection.createStatement();
-            stmt.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, balance INTEGER);");
-            stmt.execute("INSERT INTO users VALUES (1, 'Alice', 'password', 100);");
-            stmt.execute("INSERT INTO users VALUES (2, 'Bob', 'password', 100);");
+            // Create user table
+            stmt.execute("CREATE TABLE IF NOT EXISTS user (name VARCHAR(255), balance INT)");
+
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
