@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@Path("/account")
+@Path("/accounts")
 public class UserController {
 
     private final DataSource dataSource;
