@@ -75,11 +75,12 @@ public class App extends Jooby {
             // Create user table
             stmt.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, name VARCHAR(255), balance DECIMAL(10,2))");
             // Insert some test data
-            int count  = 0;
-            for (Account account : dataset) {
-                stmt.execute("INSERT INTO users (id, name, balance) VALUES (" + count + ", '" + account.getName() + "', " + account.getBalance() + ")");
-                count++;
-            }
+            stmt.execute("INSERT INTO users (id, name, balance) VALUES (1,'Rachel', 50)");
+            stmt.execute("INSERT INTO users (id, name, balance) VALUES (2,'Monica', 100)");
+            stmt.execute("INSERT INTO users (id, name, balance) VALUES (3,'Phoebe', 76)");
+            stmt.execute("INSERT INTO users (id, name, balance) VALUES (4,'Joey', 23.90)");
+            stmt.execute("INSERT INTO users (id, name, balance) VALUES (5,'Chandler', 3)");
+            stmt.execute("INSERT INTO users (id, name, balance) VALUES (6,'Ross', 54.32)");
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
