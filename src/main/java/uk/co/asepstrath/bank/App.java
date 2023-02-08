@@ -74,6 +74,12 @@ public class App extends Jooby {
             Statement stmt = connection.createStatement();
             // Create user table
             stmt.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, name VARCHAR(255), balance DECIMAL(10,2))");
+            // Insert some test data
+            int count  = 0;
+            for (Account account : dataset) {
+                stmt.execute("INSERT INTO users (id, name, balance) VALUES (" + count + ", '" + account.getName() + "', " + account.getBalance() + ")");
+                count++;
+            }
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
