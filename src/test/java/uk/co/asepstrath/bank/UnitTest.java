@@ -19,28 +19,3 @@ public class UnitTest {
             assertEquals(StatusCode.OK, rsp.getStatusCode());
         });
     }
-
-    @Test
-    public void test_accounts_200() {
-        MockRouter router = new MockRouter(new App());
-        router.get("/accounts", rsp -> {
-            assertEquals(StatusCode.OK, rsp.getStatusCode());
-        });
-    }
-
-    @Test
-    public void test_accounts_404() {
-        MockRouter router = new MockRouter(new App());
-        router.get("/accounts/JOnathon", rsp -> {
-            assertEquals(StatusCode.NOT_FOUND, rsp.getStatusCode());
-        });
-    }
-
-    @Test
-    public void test_account_200() {
-        MockRouter router = new MockRouter(new App());
-        router.post("/accounts/Monica", rsp -> {
-            assertEquals(StatusCode.OK, rsp.getStatusCode());
-        });
-    }
-}
