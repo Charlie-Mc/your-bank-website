@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class App extends Jooby {
-
     {
         /*
         This section is used for setting up the Jooby Framework modules
