@@ -65,5 +65,6 @@ public class UserController {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
         }
         return new ModelAndView("account.hbs", model);
+
     }
 }
