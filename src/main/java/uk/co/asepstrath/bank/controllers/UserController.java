@@ -34,12 +34,9 @@ public class UserController {
                 Account account = new Account(temp, rs.getString("name"));
                 accounts.add(account);
             }
+            stmt.close();
         } catch (SQLException e) {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
-        } finally {
-            // Close connection
-
-
         }
         model.put("accounts", accounts);
         return new ModelAndView("account.hbs", model);
@@ -58,13 +55,12 @@ public class UserController {
                 Account account = new Account(temp, rs.getString("name"));
                 model.put("account", account);
             } else {
+                stmt.close();
                 throw new StatusCodeException(StatusCode.NOT_FOUND, "Account not found");
             }
-
+            stmt.close();
         } catch (SQLException e) {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
-        } finally {
-            // Close connection
         }
         return new ModelAndView("account.hbs", model);
 
