@@ -26,30 +26,27 @@ public class UserController {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Accounts");
         ArrayList<Account> accounts = new ArrayList<>();
-        try {
-            Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users");
-            ResultSet rs = stmt.executeQuery();
+        try (Connection conn = dataSource.getConnection()) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users");
+             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 BigDecimal temp = rs.getBigDecimal("balance");
                 Account account = new Account(temp, rs.getString("name"));
                 accounts.add(account);
             }
+            stmt.close();
         } catch (SQLException e) {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
         }
         model.put("accounts", accounts);
-        // TODO: Add SQL for getting data from database then returning to account.hbs
         return new ModelAndView("account.hbs", model);
     }
 
     @GET("/{user}")
     public ModelAndView account(@PathParam String user) {
-        // TODO: Add Logic to get specific data from account in param
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "View Account");
-        try {
-            Connection conn = dataSource.getConnection();
+        try (Connection conn = dataSource.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE name = ?");
             stmt.setString(1, user);
             ResultSet rs =  stmt.executeQuery();
@@ -58,9 +55,10 @@ public class UserController {
                 Account account = new Account(temp, rs.getString("name"));
                 model.put("account", account);
             } else {
+                stmt.close();
                 throw new StatusCodeException(StatusCode.NOT_FOUND, "Account not found");
             }
-
+            stmt.close();
         } catch (SQLException e) {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
         }

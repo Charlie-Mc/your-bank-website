@@ -2,6 +2,7 @@ package uk.co.asepstrath.bank.models;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("unused")
 public class Account {
 
     private BigDecimal balance;
@@ -20,13 +21,17 @@ public class Account {
         return this.name;
     }
 
+    public void setName(String value) {
+        this.name = value;
+    }
+
     public void deposit(BigDecimal amount) {
         balance = balance.add(amount);
     }
 
-    public void withdraw(BigDecimal amount) throws Exception {
+    public void withdraw(BigDecimal amount) throws ArithmeticException {
         if (balance.compareTo(amount) < 0) {
-            throw new Exception("Balance to low");
+            throw new ArithmeticException("Insufficient funds");
         }
         balance = balance.subtract(amount);
     }
