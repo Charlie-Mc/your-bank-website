@@ -33,11 +33,11 @@ public class App extends Jooby {
         Now we set up our controllers and their dependencies
          */
         DataSource ds = require(DataSource.class);
-
+        Logger lgr = getLog();
         // Add Logger below this line when we implement it
 
         mvc(new HomeController());
-        mvc(new UserController(ds));
+        mvc(new UserController(ds, lgr));
 
         /*
         Finally we register our application lifecycle methods
@@ -81,7 +81,8 @@ public class App extends Jooby {
     This function will be called when the application shuts down
      */
     public void onStop() {
-        System.out.println("Shutting Down...");
+        Logger log = getLog();
+        log.info("Shutting Down...");
     }
 
 }
