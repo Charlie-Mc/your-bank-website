@@ -1,9 +1,10 @@
 package uk.co.asepstrath.bank.models;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @SuppressWarnings("unused")
-public class Account {
+public class Account implements Serializable {
 
     private BigDecimal balance;
     private String name;
@@ -44,4 +45,6 @@ public class Account {
     public String toString() {
         return "Name: " + this.name + " Balance: " + this.balance;
     }
+
+
 }
