@@ -21,6 +21,16 @@
             </td>
         </tr>
     {{/accounts}}
+    {{#if account}}
+        <tr>
+            <td class="p-2 border-end border-2">
+                <a href="/accounts/{{account.name}}">{{account.name}}</a>
+            </td>
+            <td class="p-2">
+                £{{account.balance}}
+            </td>
+        </tr>
+    {{/if}}
     </tbody>
 </table>
 
@@ -33,15 +43,10 @@
     </div>
     {{/each}}
 {{/if}}
-    {{#if account}}
-    <div class="account">
-        <h2>{{account.name}}</h2>
-        <p>{{account.balance}}</p>
-    </div>
-{{/if}}
-    {{#if json}}
-        {{json}}
-    {{/if}}
 -->
+
+{{#if json}}
+    {{json}}
+{{/if}}
 </body>
 </html>
