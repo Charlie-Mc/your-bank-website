@@ -94,6 +94,8 @@ class IntegrationTest {
                     "54.32\nRoss");
 
             assertEquals(expectedValues, actualValues);
+            assertEquals(StatusCode.OK.value(), rsp.code());
+            assertEquals("application/json", rsp.header("Content-Type"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
