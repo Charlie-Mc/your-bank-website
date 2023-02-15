@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JoobyTest(App.class)
 class IntegrationTest {
-    static OkHttpClient client = new OkHttpClient();
+    static final OkHttpClient client = new OkHttpClient();
 
     @Test
     public void shouldDisplayAccountInformation(int serverPort) {
