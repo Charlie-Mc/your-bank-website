@@ -2,6 +2,29 @@
 {{>headPartial.hbs}}
 <body>
 
+<!-- Table View -->
+<table class="border border-2 my-3 mx-3">
+    <thead>
+    <tr class="border-bottom border-2">
+        <th class="pe-4 border-end border-2 p-2">Account Name</th>
+        <th class="p-2">Balance</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#accounts}}
+        <tr class="border-bottom border-2">
+            <td class="p-2 border-end border-2">
+                <a href="/accounts/{{this.name}}">{{this.name}}</a>
+            </td>
+            <td class="p-2">
+                £{{this.balance}}
+            </td>
+        </tr>
+    {{/accounts}}
+    </tbody>
+</table>
+
+<!-- Deprecated View
 {{#if accounts}}
     {{#each accounts}}
     <div class="account">
@@ -10,14 +33,15 @@
     </div>
     {{/each}}
 {{/if}}
-{{#if account}}
+    {{#if account}}
     <div class="account">
         <h2>{{account.name}}</h2>
         <p>{{account.balance}}</p>
     </div>
 {{/if}}
-{{#if json}}
-    {{json}}
-{{/if}}
+    {{#if json}}
+        {{json}}
+    {{/if}}
+-->
 </body>
 </html>
