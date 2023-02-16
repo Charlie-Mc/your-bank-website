@@ -1,0 +1,50 @@
+/* Imports */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+/* Variables */
+// q: what is the hex code for bootstrap primary?
+$bs-primary: #0275d8;
+
+  /* Backgrounds */
+.bg-star {
+  background-image: url('/assets/images/StarryBackground.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Navigation Styling */
+.nav-link {
+  color: #fff !important;
+  transition: color 0.2s linear;
+}
+
+.nav-link.text-black {
+  color: #000 !important;
+  transition: color 0.2s linear;
+}
+
+.nav-item:hover {
+  .nav-link {
+    color: darken(#fff, 20%) !important;
+  }
+  .nav-link.text-black {
+    color: $bs-primary !important;
+  }
+}
+
+/* Fonts */
+.text-bebas {
+    font-family: 'Bebas Neue', cursive;
+}
+
+/* Text Sizes */
+.text-xxl {
+    font-size: 2rem !important;
+}
+.text-xxxl {
+    font-size: 3rem !important;
+}
+.text-xxxxl {
+    font-size: 4rem !important;
+}
