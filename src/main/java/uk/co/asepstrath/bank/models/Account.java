@@ -8,14 +8,20 @@ public class Account implements Serializable {
 
     private BigDecimal balance;
     private String name;
+    private String currency;
+    private String accountType;
+
+    private String id;
 
     public Account() {
-        this(new BigDecimal("0.00"), "Default");
     }
 
-    public Account(BigDecimal balance, String name) {
+    public Account(String id, String name, BigDecimal balance, String currency, String accountType) {
         this.balance = balance;
         this.name = name;
+        this.currency = currency;
+        this.accountType = accountType;
+        this.id = id;
     }
 
     public String getName() {
@@ -37,9 +43,30 @@ public class Account implements Serializable {
         balance = balance.subtract(amount);
     }
 
+    // getters and setters
     public BigDecimal getBalance() {
         return balance;
     }
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
+    public String getId() {
+        return id;
+    }
+
 
     @Override
     public String toString() {

@@ -6,14 +6,20 @@
     {{#each accounts}}
     <div class="account">
         <h2>{{this.name}}</h2>
+        <p>{{this.id}}</p>
         <p>{{this.balance}}</p>
+        <p>{{this.currency}}</p>
+        <p>{{this.accountType}}</p>
     </div>
     {{/each}}
 {{/if}}
 {{#if account}}
     <div class="account">
-        <h2>{{account.name}}</h2>
-        <p>{{account.balance}}</p>
+        <h2>{{this.id}}</h2>
+        <p>{{this.name}}</p>
+        <p>{{this.balance}}</p>
+        <p>{{this.currency}}</p>
+        <p>{{this.accountType}}</p>
     </div>
 {{/if}}
 {{#if json}}
