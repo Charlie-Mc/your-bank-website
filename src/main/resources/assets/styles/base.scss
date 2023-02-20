@@ -1,16 +1,16 @@
 /* Imports */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 /* Variables */
-// q: what is the hex code for bootstrap primary?
 $bs-primary: #0275d8;
+$steel-teal: #5f8a8b;
+$light-steel-teal: #f7f9fa;
+$white: #fff;
 
   /* Backgrounds */
-.bg-star {
-  background-image: url('/assets/images/StarryBackground.svg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+.bg-steel-teal {
+  background-color: $steel-teal;
 }
 
 /* Navigation Styling */
@@ -37,6 +37,14 @@ $bs-primary: #0275d8;
 .text-bebas {
     font-family: 'Bebas Neue', cursive;
 }
+.text-montserrat {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Font colors */
+.text-steel-teal {
+    color: $steel-teal;
+}
 
 /* Text Sizes */
 .text-xxl {
@@ -47,4 +55,62 @@ $bs-primary: #0275d8;
 }
 .text-xxxxl {
     font-size: 4rem !important;
+}
+
+/* Buttons */
+.btn-light-steel-teal {
+  background-color: $light-steel-teal !important;
+  color: $steel-teal !important;
+}
+
+.btn-outline-steel-teal {
+  border: 1px solid $steel-teal !important;
+  color: $steel-teal !important;
+}
+
+.btn-outline-steel-teal:hover {
+    background-color: $steel-teal !important;
+    color: $white !important;
+}
+
+/* Landing Page specific */
+#made-easy {
+    transition: all 0.25s linear;
+}
+
+/* Auth Page */
+.authform {
+    border-right: 1px solid $steel-teal;
+    border-bottom: 1px solid $steel-teal;
+    border-top: 1px solid $steel-teal;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.authform-image {
+    border-left: 1px solid $steel-teal;
+    border-bottom: 1px solid $steel-teal;
+    border-top: 1px solid $steel-teal;
+    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #c2c2c2;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #c2c2c2;
+  }
+  &::before {
+    margin-right: 0.25em;
+  }
+  &::after {
+    margin-left: 0.25em;
+  }
 }
