@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-{{>headPartial.hbs}}
+{{>partials/headPartial.hbs}}
 <body>
-{{>navBarPartial.hbs}}
+{{>partials/navBarPartial.hbs}}
 
 <!-- Table View -->
 <table class="border border-2 my-3 mx-3">
@@ -36,19 +36,11 @@
     </tbody>
 </table>
 
-<!-- Deprecated View
-{{#if accounts}}
-    {{#each accounts}}
-    <div class="account">
-        <h2>{{this.name}}</h2>
-        <p>{{this.balance}}</p>
-    </div>
-    {{/each}}
-{{/if}}
--->
-
+<!-- JSON View -->
 {{#if json}}
     {{json}}
 {{/if}}
+
+{{>partials/footerPartial.hbs}}
 </body>
 </html>
