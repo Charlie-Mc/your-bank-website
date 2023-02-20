@@ -1,9 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-{{>headPartial.hbs}}
+{{>partials/headPartial.hbs}}
 <body>
-{{>navBarPartial.hbs}}
-<h1 class="text-primary">Welcome</h1>
-
+{{>partials/navBarPartial.hbs}}
+<div class="container-fluid p-0 py-5">
+    <div class="container-fluid w-75">
+        <div class="row py-5">
+            <div class="col-6 align-items-center justify-content-start">
+                <p class="text-steel-teal text-bebas display-1 d-block w-100">
+                    <span>Team 2 Bank & Co</span>
+                    <br>
+                    Digital Banking
+                    <br>
+                    <span class="text-decoration-underline" id="made-easy">Made Easy</span>
+                </p>
+                <p class="small text-montserrat">By Andrew, Charlie, Chris, Jacob, Scott</p>
+                <br/>
+                <button type="button" class="btn btn-outline-steel-teal w-50 align-bottom">
+                    Get Started
+                </button>
+            </div>
+            <div class="col-6 align-items-center justify-content-center">
+                <img src="/assets/images/success_factors.svg" alt="Home page" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+{{>partials/footerPartial.hbs}}
+<script>
+    $(document).ready(function() {
+        $('#made-easy').hover(function () {
+            $('#made-easy').toggleClass('text-primary');
+        });
+    });
+</script>
 </body>
 </html>
