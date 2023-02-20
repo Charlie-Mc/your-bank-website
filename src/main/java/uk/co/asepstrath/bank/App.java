@@ -5,6 +5,7 @@ import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.controllers.AccountController;
 import uk.co.asepstrath.bank.controllers.HomeController;
 import uk.co.asepstrath.bank.controllers.UserController;
 
@@ -22,6 +23,7 @@ public class App extends Jooby {
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
 
+
         /*
         This will host any files in src/main/resources/assets on <host>/assets
         For example in the dice template (dice.hbs) it references "assets/dice.png" which is in resources/assets folder
@@ -38,6 +40,7 @@ public class App extends Jooby {
 
         mvc(new HomeController());
         mvc(new UserController(ds, lgr));
+        mvc(new AccountController(ds, lgr));
 
         /*
         Finally we register our application lifecycle methods
