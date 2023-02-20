@@ -41,11 +41,12 @@ public class Account implements Serializable {
             throw new ArithmeticException("Insufficient funds");
         }
         balance = balance.subtract(amount);
+
     }
 
     // getters and setters
     public BigDecimal getBalance() {
-        return balance;
+        return balance.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
     public String getCurrency() {
         return currency;
