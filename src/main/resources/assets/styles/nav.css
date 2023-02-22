@@ -1,0 +1,144 @@
+/* Navbar form */ /* Imports */
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+/* Variables */
+/* Backgrounds */
+.bg-steel-teal {
+  background-color: #5f8a8b;
+}
+
+/* Navigation Styling */
+.nav-link {
+  color: #fff !important;
+  transition: color 0.2s linear;
+}
+
+.nav-link.text-black {
+  color: #000 !important;
+  transition: color 0.2s linear;
+}
+
+.nav-item:hover .nav-link {
+  color: #cccccc !important;
+}
+.nav-item:hover .nav-link.text-black {
+  color: #0275d8 !important;
+}
+
+/* Fonts */
+.text-bebas {
+  font-family: "Bebas Neue", cursive;
+}
+
+.text-montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Font colors */
+.text-steel-teal {
+  color: #5f8a8b;
+}
+
+/* Text Sizes */
+.text-xxl {
+  font-size: 2rem !important;
+}
+
+.text-xxxl {
+  font-size: 3rem !important;
+}
+
+.text-xxxxl {
+  font-size: 4rem !important;
+}
+
+/* Buttons */
+.btn-light-steel-teal {
+  background-color: #f7f9fa !important;
+  color: #5f8a8b !important;
+}
+
+.btn-outline-steel-teal {
+  border: 1px solid #5f8a8b !important;
+  color: #5f8a8b !important;
+}
+
+.btn-outline-steel-teal:hover {
+  background-color: #5f8a8b !important;
+  color: #fff !important;
+}
+
+/* Landing Page specific */
+#made-easy {
+  transition: all 0.25s linear;
+}
+
+/* Auth Page */
+.authform {
+  border-right: 1px solid #5f8a8b;
+  border-bottom: 1px solid #5f8a8b;
+  border-top: 1px solid #5f8a8b;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+.authform-image {
+  border-left: 1px solid #5f8a8b;
+  border-bottom: 1px solid #5f8a8b;
+  border-top: 1px solid #5f8a8b;
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #c2c2c2;
+}
+.divider::before, .divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #c2c2c2;
+}
+.divider::before {
+  margin-right: 0.25em;
+}
+.divider::after {
+  margin-left: 0.25em;
+}
+
+.nav-search .btn-nav-search {
+  background-color: #fff !important;
+  color: #5f8a8b !important;
+  border-radius: 0 10px 10px 0 !important;
+  border-left: 1px solid black !important;
+  outline: none !important;
+}
+
+.nav-search .input-nav-search {
+  border-radius: 10px 0 0 10px !important;
+  outline: none !important;
+}
+
+.nav-search .input-nav-search:focus {
+  box-shadow: 1px 0 1px 1px #f7f9fa !important;
+  border: none !important;
+  outline: none !important;
+}
+.nav-search .input-nav-search:focus .btn-nav-search {
+  box-shadow: 1px 0 1px 1px #f7f9fa !important;
+}
+
+.nav-search .btn-nav-search:hover {
+  background-color: #5f8a8b !important;
+  border-right: 1px solid #fff !important;
+  border-top: 1px solid #fff !important;
+  border-bottom: 1px solid #fff !important;
+  border-left: 1px solid black !important;
+  box-shadow: 1px 0 1px 1px #f7f9fa !important;
+  color: #fff !important;
+  outline: none !important;
+}
+
+/*# sourceMappingURL=nav.css.map */

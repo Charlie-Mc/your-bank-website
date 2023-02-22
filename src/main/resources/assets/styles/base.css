@@ -1,0 +1,51 @@
+/* Imports */
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+/* Variables */
+/* Backgrounds */
+.bg-steel-teal {
+  background-color: #5f8a8b;
+}
+
+/* Navigation Styling */
+.nav-link {
+  color: #fff !important;
+  transition: color 0.2s linear;
+}
+
+.nav-link.text-black {
+  color: #000 !important;
+  transition: color 0.2s linear;
+}
+
+.nav-item:hover .nav-link {
+  color: #cccccc !important;
+}
+.nav-item:hover .nav-link.text-black {
+  color: #0275d8 !important;
+}
+
+/* Fonts */
+.text-bebas {
+  font-family: "Bebas Neue", cursive;
+}
+
+/* Text Sizes */
+.text-xxl {
+  font-size: 2rem !important;
+}
+
+.text-xxxl {
+  font-size: 3rem !important;
+}
+
+.text-xxxxl {
+  font-size: 4rem !important;
+}
+
+/* Buttons */
+.btn-light-steel-teal {
+  background-color: #f7f9fa !important;
+  color: #5f8a8b !important;
+}
+
+/*# sourceMappingURL=base.css.map */

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+{{>partials/headPartial.hbs}}
+<body>
+{{>partials/navBarPartial.hbs}}
+<div class="container-md w-75 py-5">
+    <div class="row py-5">
+        <div class="col-6 d-flex align-items-center justify-content-center bg-steel-teal authform-image p-3">
+            <img src="/assets/images/mobile_login.svg" alt="authform-image" class="img-fluid">
+        </div>
+        <div class="col-6 authform">
+            {{#if signup}}
+                {{>partials/signupPartial.hbs}}
+            {{else if login }}
+                {{>partials/loginPartial.hbs}}
+            {{else}}
+            <h1 class="display-4 text-bebas text-start text-steel-teal">Goodbye!</h1>
+            {{/if}}
+        </div>
+    </div>
+</div>
+{{>partials/footerPartial.hbs}}
+</body>
+</html>

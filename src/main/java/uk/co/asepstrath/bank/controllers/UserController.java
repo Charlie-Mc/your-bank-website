@@ -18,6 +18,8 @@ import java.util.HashMap;
 @Path("/accounts")
 public class UserController {
 
+
+
     private final DataSource dataSource;
     private final Logger logger;
 
@@ -36,7 +38,7 @@ public class UserController {
              ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 BigDecimal temp = rs.getBigDecimal("balance");
-                Account account = new Account(temp, rs.getString("name"));
+                Account account = new Account(rs.getString("id"),rs.getString("name"), temp,rs.getString("currency"),rs.getString("accountType"));
                 accounts.add(account);
             }
             logger.info("Accounts Loaded: " + accounts);
@@ -59,12 +61,12 @@ public class UserController {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "View Account");
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE name = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
             stmt.setString(1, user);
             ResultSet rs =  stmt.executeQuery();
             if (rs.next()) {
                 BigDecimal temp = rs.getBigDecimal("balance");
-                Account account = new Account(temp, rs.getString("name"));
+                Account account = new Account(rs.getString("id"),rs.getString("name"), temp,rs.getString("currency"),rs.getString("accountType"));
                 if (format != null && format.equals("json")) {
                     ctx.setResponseType("application/json");
                     logger.info("Account Loaded in JSON: " + account);
