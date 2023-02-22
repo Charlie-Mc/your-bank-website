@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Transaction {
-    private String transactionID;
+    private String id;
     private String withdrawAccount;
     private String depositAccount;
     private BigDecimal priorBalance;
@@ -20,15 +20,15 @@ public class Transaction {
 
     /**
      * Constructor for Transaction
-     * @param transactionID String
+     * @param id String
      * @param withdrawAccount String
      * @param depositAccount String
      * @param date Date
      * @param amount BigDecimal
      * @param currency String
      */
-    public Transaction(String transactionID, String withdrawAccount, String depositAccount, Date date, BigDecimal amount, String currency) {
-        this.transactionID = transactionID;
+    public Transaction(String id, String withdrawAccount, String depositAccount, Date date, BigDecimal amount, String currency) {
+        this.id = id;
         this.withdrawAccount = withdrawAccount;
         this.depositAccount = depositAccount;
         this.date = date;
@@ -38,14 +38,14 @@ public class Transaction {
 
     /**
      * Constructor for Transaction
-     * @param transactionID String
+     * @param id String
      * @param withdrawAccount String
      * @param depositAccount String
      * @param date Date
      * @param amount BigDecimal
      */
-    public Transaction(String transactionID, String withdrawAccount, String depositAccount, Date date, BigDecimal amount) {
-        this.transactionID = transactionID;
+    public Transaction(String id, String withdrawAccount, String depositAccount, Date date, BigDecimal amount) {
+        this.id = id;
         this.withdrawAccount = withdrawAccount;
         this.depositAccount = depositAccount;
         this.date = date;
@@ -72,8 +72,8 @@ public class Transaction {
      * Get the transaction ID
      * @return String
      */
-    public String getTransactionID() {
-        return transactionID;
+    public String getId() {
+        return id;
     }
 
     /**
@@ -127,7 +127,7 @@ public class Transaction {
      */
     public static Transaction getTransaction(String transactionID) {
         for (Transaction transaction : transactions) {
-            if (transaction.getTransactionID().equals(transactionID)) {
+            if (transaction.getId().equals(transactionID)) {
                 return transaction;
             }
         }
