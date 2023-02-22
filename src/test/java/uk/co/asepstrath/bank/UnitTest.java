@@ -4,8 +4,11 @@ import io.jooby.MockRouter;
 import io.jooby.StatusCode;
 import org.junit.jupiter.api.Test;
 import uk.co.asepstrath.bank.models.Account;
+import uk.co.asepstrath.bank.models.Transaction;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,4 +67,31 @@ class UnitTest {
         assertEquals(a.getBalance(), new BigDecimal("23.01"));
     }
 
+    @Test
+    public void testDoTransaction() {
+        Account a = new Account("12h","Derek",new BigDecimal("20.00"), "GDP", "Savings");
+        Account b = new Account("13h","Derek",new BigDecimal("20.00"), "GDP", "Savings");
+        ArrayList<Account> accounts = new ArrayList<Account>();
+        accounts.add(a);
+        accounts.add(b);
+        Transaction t = new Transaction("1", a.getId(), b.getId(), new Date(), new BigDecimal("10.00"));
+        t.doTransaction(accounts);
+        assertEquals(a.getBalance(), new BigDecimal("10.00"));
+        assertEquals(b.getBalance(), new BigDecimal("30.00"));
+        assertEquals(t.getPostBalance(), new BigDecimal("10.00"));
+        assertEquals(t.getPriorBalance(), new BigDecimal("20.00"));
+    }
+
+    @Test
+    public void test_failDoTransaction() {
+        Account a = new Account("12h","Derek",new BigDecimal("20.00"), "GDP", "Savings");
+        Account b = new Account("13h","Derek",new BigDecimal("20.00"), "GDP", "Savings");
+        ArrayList<Account> accounts = new ArrayList<Account>();
+        accounts.add(a);
+        accounts.add(b);
+        Transaction t = new Transaction("1", a.getId(), b.getId(), new Date(), new BigDecimal("30.00"));
+        assertFalse(t.doTransaction(accounts));
+        assertEquals(a.getBalance(), new BigDecimal("20.00"));
+        assertEquals(b.getBalance(), new BigDecimal("20.00"));
+    }
 }
