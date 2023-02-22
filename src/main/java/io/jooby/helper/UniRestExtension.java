@@ -11,4 +11,7 @@ public class UniRestExtension implements Extension {
     public void install(@Nonnull Jooby jooby) {
         jooby.onStop(Unirest::shutDown);
     }
+
+
+
 }
