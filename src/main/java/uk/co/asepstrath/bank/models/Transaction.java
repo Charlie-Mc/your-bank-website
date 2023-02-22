@@ -76,6 +76,33 @@ public class Transaction {
         return transactionID;
     }
 
+    /**
+     * Get the date
+     * @return Date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * Get the amount
+     * @return BigDecimal
+     */
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    /**
+     * Get the currency
+     * @return String
+     */
+    public String getCurrency() {
+        return currency;
+    }
+
+    /*
+
+     */
     public BigDecimal getPriorBalance() {
         return priorBalance;
     }
