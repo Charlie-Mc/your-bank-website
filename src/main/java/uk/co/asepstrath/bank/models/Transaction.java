@@ -139,68 +139,75 @@ public class Transaction {
      * @param accountID String
      * @return ArrayList<Transaction>
      */
-     public static ArrayList<Transaction> getWithdrawalsByAccount(String accountID) {
-         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-         for (Transaction transaction : Transaction.getTransactions()) {
-             if (transaction.getWithdrawAccount().equals(accountID) || transaction.getDepositAccount().equals(accountID)) {
-                 transactions.add(transaction);
-             }
-         }
-         return transactions;
-     }
-
-     /**
-      * Get all deposit transactions by account
-      * @param accountID String
-      * @return ArrayList<Transaction>
-      */
-     public static ArrayList<Transaction> getDepositsByAccount(String accountID) {
-         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-         for (Transaction transaction : Transaction.getTransactions()) {
-             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
-                 transactions.add(transaction);
-             }
-         }
-         return transactions;
-     }
-
-     /**
-      * Get all transactions by account
-      * @param accountID String
-      * @return ArrayList<Transaction>
-      */
-        public static ArrayList<Transaction> getTransactionsByAccount(String accountID) {
-            ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-            for (Transaction transaction : Transaction.getTransactions()) {
-                if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
-                    transactions.add(transaction);
-                }
-            }
-            return transactions;
-        }
-
-        public boolean doTransaction(ArrayList<Account> accounts) {
-            Account withdrawAcc = null;
-            Account depositAcc = null;
-            for (Account account : accounts) {
-                if (account.getId().equals(this.getWithdrawAccount())) {
-                    withdrawAcc = account;
-                }
-                if (account.getId().equals(this.getDepositAccount())) {
-                    depositAcc = account;
-                }
-            }
-            if (withdrawAcc == null || depositAcc == null) {
-                return false;
-            }
-            this.priorBalance = withdrawAcc.getBalance();
-            this.postBalance = withdrawAcc.getBalance().subtract(this.amount);
-            try {
-                withdrawAcc.withdraw(this.amount);
-                depositAcc.deposit(this.amount);
-                return true;
-            } catch (ArithmeticException e) {
-                return false;
+    public static ArrayList<Transaction> getWithdrawalsByAccount(String accountID) {
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        for (Transaction transaction : Transaction.getTransactions()) {
+            if (transaction.getWithdrawAccount().equals(accountID) || transaction.getDepositAccount().equals(accountID)) {
+                transactions.add(transaction);
             }
         }
+        return transactions;
+    }
+
+    /**
+     * Get all deposit transactions by account
+     * @param accountID String
+     * @return ArrayList<Transaction>
+     */
+    public static ArrayList<Transaction> getDepositsByAccount(String accountID) {
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        for (Transaction transaction : Transaction.getTransactions()) {
+            if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
+                transactions.add(transaction);
+            }
+        }
+        return transactions;
+    }
+
+    /**
+     * Get all transactions by account
+     * @param accountID String
+     * @return ArrayList<Transaction>
+     */
+    public static ArrayList<Transaction> getTransactionsByAccount(String accountID) {
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        for (Transaction transaction : Transaction.getTransactions()) {
+            if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
+                transactions.add(transaction);
+            }
+        }
+        return transactions;
+    }
+
+    public boolean doTransaction(ArrayList<Account> accounts) {
+        Account withdrawAcc = null;
+        Account depositAcc = null;
+        for (Account account : accounts) {
+            if (account.getId().equals(this.getWithdrawAccount())) {
+                withdrawAcc = account;
+            }
+            if (account.getId().equals(this.getDepositAccount())) {
+                depositAcc = account;
+            }
+        }
+        if (withdrawAcc == null || depositAcc == null) {
+            return false;
+        }
+        this.priorBalance = withdrawAcc.getBalance();
+        this.postBalance = withdrawAcc.getBalance().subtract(this.amount);
+        try {
+            withdrawAcc.withdraw(this.amount);
+            depositAcc.deposit(this.amount);
+            return true;
+        } catch (ArithmeticException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction [amount=" + amount + ", currency=" + currency + ", date=" + date + ", depositAccount="
+                + depositAccount + ", id=" + id + ", priorBalance=" + priorBalance + ", postBalance=" + postBalance
+                + ", withdrawAccount=" + withdrawAccount + "]\n";
+    }
 }
