@@ -66,7 +66,7 @@ public class App extends Jooby {
         log.info("Starting Up...");
         // Fetch DB Source
         DataSource ds = require(DataSource.class);
-        String url = "https://api.asep-strath.co.uk/api/team12/accounts";
+        String url = "https://api.asep-strath.co.uk/api/team2/accounts";
         // Open Connection to DB
         createAndFillDatabase(ds,url,log);
     }

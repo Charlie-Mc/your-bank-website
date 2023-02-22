@@ -92,7 +92,7 @@ class IntegrationTest {
             } */
 
             // saving the expected values in a list to compare actualValues
-            HttpResponse<List<Account>> accountListResponse2 = Unirest.get("https://api.asep-strath.co.uk/api/team12/accounts").asObject(new GenericType<List<Account>>() {
+            HttpResponse<List<Account>> accountListResponse2 = Unirest.get("https://api.asep-strath.co.uk/api/team2/accounts").asObject(new GenericType<List<Account>>() {
             });
             List<Account> expectedValues = accountListResponse2.getBody();
             expectedValues.sort((a, b) -> a.getName().compareTo(b.getName()));
