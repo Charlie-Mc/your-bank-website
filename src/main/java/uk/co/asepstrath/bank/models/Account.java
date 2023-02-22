@@ -46,6 +46,9 @@ public class Account implements Serializable {
 
     // getters and setters
     public BigDecimal getBalance() {
+        if (balance == null) {
+            return null;
+        }
         return balance.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
     public String getCurrency() {
