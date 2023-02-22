@@ -10,6 +10,7 @@ import kong.unirest.Unirest;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.controllers.AccountController;
 import uk.co.asepstrath.bank.controllers.HomeController;
+import uk.co.asepstrath.bank.controllers.TransactionController;
 import uk.co.asepstrath.bank.controllers.UserController;
 import uk.co.asepstrath.bank.models.Account;
 
@@ -47,6 +48,7 @@ public class App extends Jooby {
         mvc(new HomeController());
         mvc(new UserController(ds, lgr));
         mvc(new AccountController(ds, lgr));
+        mvc(new TransactionController(lgr, ds));
 
         /*
         Finally we register our application lifecycle methods
