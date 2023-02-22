@@ -1,11 +1,16 @@
 package uk.co.asepstrath.bank.controllers;
 
 import io.jooby.ModelAndView;
+import io.jooby.StatusCode;
 import io.jooby.annotations.Path;
 import io.jooby.annotations.GET;
+import io.jooby.exception.StatusCodeException;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.models.Transaction;
 
 import javax.sql.DataSource;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Path("/transactions")
@@ -28,7 +33,25 @@ public class TransactionController {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Transactions");
         model.put("mode", "normal");
+        ArrayList<Transaction> transactions = new ArrayList<>();
         // Logic Here
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM transactions");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                transactions.add(new Transaction(
+                        resultSet.getString("id"),
+                        resultSet.getString("fromAccount"),
+                        resultSet.getString("toAccount"),
+                        resultSet.getDate("date"),
+                        resultSet.getBigDecimal("amount"),
+                        resultSet.getString("currency")
+                ));
+            }
+            model.put("transactions", transactions);
+        } catch (SQLException e) {
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Unable to connect to database", e);
+        }
         logger.info("Successful Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
     }
