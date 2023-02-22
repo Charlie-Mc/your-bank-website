@@ -1,0 +1,36 @@
+/* Navbar form */
+@import "base";
+
+.nav-search .btn-nav-search {
+    background-color: $white !important;
+    color: $steel-teal !important;
+    border-radius: 0 10px 10px 0 !important;
+    border-left: 1px solid black !important;
+    outline: none !important;
+}
+
+.nav-search .input-nav-search {
+    border-radius: 10px 0 0 10px !important;
+    outline: none !important;
+}
+
+.nav-search .input-nav-search:focus {
+    box-shadow: 1px 0 1px 1px $light-steel-teal !important;
+    border: none !important;
+    outline: none !important;
+
+    .btn-nav-search {
+        box-shadow: 1px 0 1px 1px $light-steel-teal !important;
+    }
+}
+
+.nav-search .btn-nav-search:hover {
+    background-color: $steel-teal !important;
+    border-right: 1px solid $white !important;
+    border-top: 1px solid $white !important;
+    border-bottom: 1px solid $white !important;
+    border-left: 1px solid black !important;
+    box-shadow: 1px 0 1px 1px $light-steel-teal !important;
+    color: $white !important;
+    outline: none !important;
+}
