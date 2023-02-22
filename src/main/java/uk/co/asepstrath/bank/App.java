@@ -13,6 +13,7 @@ import uk.co.asepstrath.bank.controllers.HomeController;
 import uk.co.asepstrath.bank.controllers.TransactionController;
 import uk.co.asepstrath.bank.controllers.UserController;
 import uk.co.asepstrath.bank.models.Account;
+import uk.co.asepstrath.bank.models.Transaction;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -105,14 +106,25 @@ public class App extends Jooby {
                 insert.setString(5, account.getAccountType());
                 insert.executeUpdate();
             }
-      /*    // some test cases
-            stmt.execute("INSERT INTO users (id, name, balance, currency, accountType) VALUES (1,'Rachel', 50, 'GBP', 'Current')");
-            stmt.execute("INSERT INTO users (id, name, balance,currency, accountType) VALUES (2,'Monica', 100, 'GBP', 'Current')");
-            stmt.execute("INSERT INTO users (id, name, balance,currency, accountType) VALUES (3,'Phoebe', 76, 'GBP', 'Current')");
-            stmt.execute("INSERT INTO users (id, name, balance,currency, accountType) VALUES (4,'Joey', 23.90, 'GBP', 'Current')");
-            stmt.execute("INSERT INTO users (id, name, balance,currency, accountType) VALUES (5,'Chandler', 3, 'GBP', 'Current')");
-            stmt.execute("INSERT INTO users (id, name, balance,currency, accountType) VALUES (6,'Ross', 54.32, 'GBP', 'Current')");
-     */       stmt.close();
+
+            // Transactions
+            stmt.execute("CREATE TABLE transactions (id VARCHAR PRIMARY KEY, fromAccount VARCHAR(255), toAccount VARCHAR(255), amount DECIMAL(10,2), currency VARCHAR(3), date VARCHAR(255))");
+            // Gather transactions from API
+            url = "https://api.asep-strath.co.uk/api/team2/transactions";
+            HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).asObject(new GenericType<List<Transaction>>(){});
+            List<Transaction> TransactionList = transactionListResponse.getBody();
+            // Insert the data to table
+            insert = connection.prepareStatement("INSERT INTO transactions (id, fromAccount, toAccount, amount, currency, date) VALUES (?, ?, ?, ?, ?, ?)");
+            for (Transaction transaction : TransactionList) {
+                insert.setString(1, transaction.getTransactionID());
+                insert.setString(2, transaction.getWithdrawAccount());
+                insert.setString(3, transaction.getDepositAccount());
+                insert.setBigDecimal(4, transaction.getAmount());
+                insert.setString(5, transaction.getCurrency());
+                insert.setString(6, transaction.getDate().toString());
+                insert.executeUpdate();
+            }
+            log.info("Database Created");
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
