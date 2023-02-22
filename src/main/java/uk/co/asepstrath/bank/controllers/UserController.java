@@ -58,8 +58,8 @@ public class UserController {
                     BigDecimal temp = rs.getBigDecimal("balance");
                     Account account = new Account(rs.getString("id"), rs.getString("name"), temp, rs.getString("currency"), rs.getString("accountType"));
                     accounts.add(account);
-                    this.accounts = accounts;
                 }
+                this.accounts = accounts;
                 logger.info("Accounts Loaded: " + accounts.size());
                 stmt.close();
             } catch (SQLException e) {
