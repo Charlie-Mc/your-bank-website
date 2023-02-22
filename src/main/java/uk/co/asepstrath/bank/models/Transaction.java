@@ -76,6 +76,14 @@ public class Transaction {
         return transactionID;
     }
 
+    public BigDecimal getPriorBalance() {
+        return priorBalance;
+    }
+
+    public BigDecimal getPostBalance() {
+        return postBalance;
+    }
+
     // Static Methods
     /**
      * Get all transactions
