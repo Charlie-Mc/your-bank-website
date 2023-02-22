@@ -4,7 +4,13 @@
 <body>
 {{>partials/navBarPartial.hbs}}
 <div class="container-fluid p-0">
-    {{transactions}}
+    {{#if normal }}
+        {{transactions}}
+    {{else if fraud}}
+        <!-- Fraud stuff here -->
+    {{else}}
+        <!-- All stuff here -->
+    {{/if}}
 </div>
 {{>partials/footerPartial.hbs}}
 </body>
