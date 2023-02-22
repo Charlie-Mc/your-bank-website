@@ -4,6 +4,7 @@ import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
 import io.jooby.annotations.Path;
 import io.jooby.annotations.GET;
+import io.jooby.annotations.PathParam;
 import io.jooby.exception.StatusCodeException;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.models.Transaction;
@@ -81,6 +82,26 @@ public class TransactionController {
         model.put("mode", "all");
         // Logic Here
         logger.info("All Transactions Loaded");
+        return new ModelAndView("transactionView.hbs", model);
+    }
+
+    @GET("/account/withdrawal/{user}")
+    public ModelAndView accountWithdrawalTransactions(@PathParam String user) {
+        HashMap<String, Object> model = new HashMap<>();
+        model.put("title", "Account Transactions");
+        model.put("mode", "account");
+        // Logic Here
+        logger.info("Account Transactions Loaded");
+        return new ModelAndView("transactionView.hbs", model);
+    }
+
+    @GET("/account/deposit/{user}")
+    public ModelAndView accountDepositTransactions(@PathParam String user) {
+        HashMap<String, Object> model = new HashMap<>();
+        model.put("title", "Account Transactions");
+        model.put("mode", "account");
+        // Logic Here
+        logger.info("Account Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
     }
 }
