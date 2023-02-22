@@ -2,6 +2,7 @@ package uk.co.asepstrath.bank.controllers;
 
 import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
+import io.jooby.annotations.POST;
 import io.jooby.annotations.Path;
 import io.jooby.annotations.GET;
 import io.jooby.annotations.PathParam;
@@ -97,6 +98,16 @@ public class TransactionController {
 
     @GET("/account/deposit/{user}")
     public ModelAndView accountDepositTransactions(@PathParam String user) {
+        HashMap<String, Object> model = new HashMap<>();
+        model.put("title", "Account Transactions");
+        model.put("accountDeposit", "account");
+        // Logic Here
+        logger.info("Account Transactions Loaded");
+        return new ModelAndView("transactionView.hbs", model);
+    }
+
+    @GET("/account/all/{user}")
+    public ModelAndView accountTransactions(@PathParam String user) {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Account Transactions");
         model.put("accountDeposit", "account");
