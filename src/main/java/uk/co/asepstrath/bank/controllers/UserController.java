@@ -6,7 +6,6 @@ import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
 import io.jooby.annotations.*;
 import io.jooby.exception.StatusCodeException;
-import org.apache.http.annotation.Obsolete;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.models.Account;
 import uk.co.asepstrath.bank.models.Page;

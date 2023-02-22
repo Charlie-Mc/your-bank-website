@@ -2,7 +2,6 @@ package uk.co.asepstrath.bank.controllers;
 
 import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
-import io.jooby.annotations.POST;
 import io.jooby.annotations.Path;
 import io.jooby.annotations.GET;
 import io.jooby.annotations.PathParam;
