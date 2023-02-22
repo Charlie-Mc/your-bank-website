@@ -116,12 +116,12 @@ public class App extends Jooby {
             // Insert the data to table
             insert = connection.prepareStatement("INSERT INTO transactions (id, fromAccount, toAccount, amount, currency, date) VALUES (?, ?, ?, ?, ?, ?)");
             for (Transaction transaction : TransactionList) {
-                insert.setString(1, transaction.getTransactionID());
+                insert.setString(1, transaction.getId());
                 insert.setString(2, transaction.getWithdrawAccount());
                 insert.setString(3, transaction.getDepositAccount());
                 insert.setBigDecimal(4, transaction.getAmount());
                 insert.setString(5, transaction.getCurrency());
-                insert.setString(6, transaction.getDate().toString());
+                insert.setString(6, transaction.getDate() == null ? null : transaction.getDate().toString());
                 insert.executeUpdate();
             }
             log.info("Database Created");
