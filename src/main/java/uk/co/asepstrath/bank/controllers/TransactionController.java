@@ -33,7 +33,7 @@ public class TransactionController {
     public ModelAndView transactions() {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Transactions");
-        model.put("mode", "normal");
+        model.put("normal", "normal");
         ArrayList<Transaction> transactions = new ArrayList<>();
         // Logic Here
         try (Connection connection = dataSource.getConnection()) {
@@ -65,7 +65,7 @@ public class TransactionController {
     public ModelAndView fraudulentTransactions() {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Fraudulent Transactions");
-        model.put("mode", "fraud");
+        model.put("fraud", "fraud");
         // Logic Here
         logger.info("Fraudulent Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
@@ -79,7 +79,7 @@ public class TransactionController {
     public ModelAndView allTransactions() {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "All Transactions");
-        model.put("mode", "all");
+        model.put("all", "all");
         // Logic Here
         logger.info("All Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
@@ -89,7 +89,7 @@ public class TransactionController {
     public ModelAndView accountWithdrawalTransactions(@PathParam String user) {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Account Transactions");
-        model.put("mode", "account");
+        model.put("accountWithdrawal", "account");
         // Logic Here
         logger.info("Account Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
@@ -99,7 +99,7 @@ public class TransactionController {
     public ModelAndView accountDepositTransactions(@PathParam String user) {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Account Transactions");
-        model.put("mode", "account");
+        model.put("accountDeposit", "account");
         // Logic Here
         logger.info("Account Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
