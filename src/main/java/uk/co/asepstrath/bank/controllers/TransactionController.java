@@ -104,14 +104,4 @@ public class TransactionController {
         logger.info("Account Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
     }
-
-    @GET("/account/all/{user}")
-    public ModelAndView accountTransactions(@PathParam String user) {
-        HashMap<String, Object> model = new HashMap<>();
-        model.put("title", "Account Transactions");
-        model.put("accountDeposit", "account");
-        // Logic Here
-        logger.info("Account Transactions Loaded");
-        return new ModelAndView("transactionView.hbs", model);
-    }
 }

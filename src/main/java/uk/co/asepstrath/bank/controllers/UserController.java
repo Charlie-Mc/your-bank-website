@@ -126,4 +126,41 @@ public class UserController {
         }
         return new ModelAndView("account.hbs", model);
     }
+
+    /**
+     * Used to search for accounts by name
+     * @param name Account name
+     * @return ModelAndView
+     */
+    @GET("/search")
+    public ModelAndView accountSearch(@QueryParam String name) {
+        HashMap<String, Object> model = new HashMap<>();
+        model.put("title", "Search Accounts");
+        model.put("accountSearch", "account");
+        ArrayList<Account> accounts = new ArrayList<>();
+        // First find out if account exists
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT id, name, balance, currency, accountType FROM users WHERE lower(name) LIKE ?;");
+            statement.setString(1, name + "%");
+            ResultSet resultSet = statement.executeQuery();
+            // Check if count is greater than 0
+            while (resultSet.next()) {
+                accounts.add(new Account(
+                        resultSet.getString("id"),
+                        resultSet.getString("name"),
+                        resultSet.getBigDecimal("balance"),
+                        resultSet.getString("currency"),
+                        resultSet.getString("accountType")
+                ));
+            }
+        } catch (SQLException e) {
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Unable to connect to database", e);
+        }
+        if (accounts.size() == 0) {
+            throw new StatusCodeException(StatusCode.NOT_FOUND, "Account not found");
+        }
+        model.put("accounts", accounts);
+        model.put("count", accounts.size());
+        return new ModelAndView("account.hbs", model);
+    }
 }
