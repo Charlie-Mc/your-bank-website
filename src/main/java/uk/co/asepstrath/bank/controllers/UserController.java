@@ -160,7 +160,7 @@ public class UserController {
             throw new StatusCodeException(StatusCode.NOT_FOUND, "Account not found");
         }
         model.put("accounts", accounts);
-        model.put("count", accounts.size());
+        model.put("pageCount", accounts.size());
         return new ModelAndView("account.hbs", model);
     }
 }
