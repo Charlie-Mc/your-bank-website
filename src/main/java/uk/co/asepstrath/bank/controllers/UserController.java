@@ -9,6 +9,7 @@ import io.jooby.exception.StatusCodeException;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.models.Account;
 import uk.co.asepstrath.bank.models.Page;
+import uk.co.asepstrath.bank.models.Transaction;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -101,6 +102,7 @@ public class UserController {
     public Object account(@PathParam String user, @QueryParam String format, Context ctx) {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "View Account");
+        ArrayList<Transaction> transactions = new ArrayList<>();
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
             stmt.setString(1, user);
@@ -119,6 +121,27 @@ public class UserController {
                 stmt.close();
                 throw new StatusCodeException(StatusCode.NOT_FOUND, "Account not found");
             }
+            // Now load transactions (All transactions for now)
+            PreparedStatement stmt2 = conn.prepareStatement("SELECT * FROM transactions WHERE fromAccount = ? OR toAccount = ?");
+            stmt2.setString(1, user);
+            stmt2.setString(2, user);
+            ResultSet rs2 = stmt2.executeQuery();
+            if (rs2.next()) {
+                do {
+                    transactions.add(
+                            new Transaction(
+                                    rs2.getString("id"),
+                                    rs2.getString("fromAccount"),
+                                    rs2.getString("toAccount"),
+                                    rs2.getDate("date"),
+                                    rs2.getBigDecimal("amount"),
+                                    rs2.getString("currency")
+                            )
+                    );
+                } while (rs2.next());
+            }
+            logger.info("Transactions Loaded: " + transactions);
+            model.put("transactions", transactions);
             stmt.close();
         } catch (SQLException e) {
             logger.error("Error connecting to database", e);
@@ -141,7 +164,7 @@ public class UserController {
         // First find out if account exists
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT id, name, balance, currency, accountType FROM users WHERE lower(name) LIKE ?;");
-            statement.setString(1, name + "%");
+            statement.setString(1, name.toLowerCase() + "%");
             ResultSet resultSet = statement.executeQuery();
             // Check if count is greater than 0
             while (resultSet.next()) {
