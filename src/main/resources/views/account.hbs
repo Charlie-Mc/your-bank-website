@@ -57,7 +57,7 @@
         {{#if account}}
             <tr>
                 <td class="p-2 border-end border-2">
-                    <a href="/accounts/{{account.name}}">{{account.name}}</a>
+                    <a href="/accounts/{{account.id}}">{{account.name}}</a>
                 </td>
                 <td class="p-2">
                     {{account.id}}
@@ -75,6 +75,36 @@
         {{/if}}
         </tbody>
     </table>
+    {{#if account}}
+        {{#if transactions}}
+            <div class="container-sm">
+            <table class="table my-3 mx-auto table-hover table-striped table-light">
+                <thead>
+                <tr>
+                    <th scope="col" class="text-primary">ID</th>
+                    <th scope="col" class="text-primary">From</th>
+                    <th scope="col" class="text-primary">To</th>
+                    <th scope="col" class="text-primary">Date</th>
+                    <th scope="col" class="text-primary">Amount</th>
+                    <th scope="col" class="text-primary">Currency</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each transactions}}
+                    <tr>
+                        <th scope="row">{{id}}</th>
+                        <td>{{withdrawAccount}}</td>
+                        <td>{{depositAccount}}</td>
+                        <td>{{date}}</td>
+                        <td>£{{amount}}</td>
+                        <td>{{currency}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            </div>
+        {{/if}}
+    {{/if}}
      {{>partials/paginationPartial.hbs}}
     <!-- JSON View -->
     {{#if json}}
