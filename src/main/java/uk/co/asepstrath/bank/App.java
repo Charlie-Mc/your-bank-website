@@ -58,9 +58,7 @@ public class App extends Jooby {
         onStop(this::onStop);
     }
 
-    public static void main(final String[] args) {
-        runApp(args, App::new);
-    }
+    public static void main(final String[] args) { runApp(args, App::new); }
 
     /*
     This function will be called when the application starts up,
@@ -129,5 +127,4 @@ public class App extends Jooby {
             log.error("Database Creation Error",e);
         }
     }
-
 }
