@@ -14,12 +14,9 @@ import uk.co.asepstrath.bank.controllers.TransactionController;
 import uk.co.asepstrath.bank.controllers.UserController;
 import uk.co.asepstrath.bank.models.Account;
 import uk.co.asepstrath.bank.models.Transaction;
+import uk.co.asepstrath.bank.services.DatabaseService;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 public class App extends Jooby {
@@ -51,6 +48,9 @@ public class App extends Jooby {
         mvc(new AccountController(ds, lgr));
         mvc(new TransactionController(lgr, ds));
 
+        // Initialise DatabaseService
+        new DatabaseService(ds, lgr);
+
         /*
         Finally we register our application lifecycle methods
          */
@@ -68,11 +68,7 @@ public class App extends Jooby {
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
-        // Fetch DB Source
-        DataSource ds = require(DataSource.class);
-        String url = "https://api.asep-strath.co.uk/api/team2/accounts";
-        // Open Connection to DB
-        createAndFillDatabase(ds,url,log);
+        createAndFillDatabase(log);
     }
     /*
     This function will be called when the application shuts down
@@ -82,49 +78,45 @@ public class App extends Jooby {
         log.info("Shutting Down...");
     }
 
-    public void createAndFillDatabase(DataSource ds, String url, Logger log){
-        // create a database connection
-        try (Connection connection = ds.getConnection()) {
-            Statement stmt = connection.createStatement();
-
-            // Fetch data from API
-            HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
-            List<Account> AccountList = accountListResponse.getBody();
-
-            // Create user table
-            stmt.execute("CREATE TABLE users (id VARCHAR PRIMARY KEY, name VARCHAR(255), balance DECIMAL(10,2), currency VARCHAR(3), accountType VARCHAR(255))");
-            // Insert some test data
-            PreparedStatement insert = connection.prepareStatement("INSERT INTO users (id, name, balance, currency, accountType) VALUES (?, ?, ?, ?, ?)");
-
-            for(Account account : AccountList) {
-                insert.setString(1, account.getId());
-                insert.setString(2, account.getName());
-                insert.setBigDecimal(3, account.getBalance());
-                insert.setString(4, account.getCurrency());
-                insert.setString(5, account.getAccountType());
-                insert.executeUpdate();
+    public void createAndFillDatabase(Logger log){
+        // Accounts
+        String url = "https://api.asep-strath.co.uk/api/team2/accounts";
+        HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
+        List<Account> AccountList = accountListResponse.getBody();
+        DatabaseService.executeUpdate("CREATE TABLE users (id VARCHAR PRIMARY KEY, name VARCHAR(255), balance DECIMAL(10,2), currency VARCHAR(3), accountType VARCHAR(255))");
+        for (Account account : AccountList) {
+            int status = DatabaseService.executeUpdate("INSERT INTO users (id, name, balance, currency, accountType) VALUES (?, ?, ?, ?, ?)",
+                    account.getId(),
+                    account.getName().length() <= 255 ? account.getName()  : null,
+                    account.getBalance(),
+                    account.getCurrency(),
+                    account.getAccountType()
+            );
+            if (status == 0) {
+                log.error("Failed to insert account: " + account.getId());
             }
-
-            // Transactions
-            stmt.execute("CREATE TABLE transactions (id VARCHAR PRIMARY KEY, fromAccount VARCHAR(255), toAccount VARCHAR(255), amount DECIMAL(10,2), currency VARCHAR(3), date VARCHAR(255))");
-            // Gather transactions from API
-            url = "https://api.asep-strath.co.uk/api/team2/transactions?PageNumber=1&PageSize=1000";
-            HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).asObject(new GenericType<List<Transaction>>(){});
-            List<Transaction> TransactionList = transactionListResponse.getBody();
-            // Insert the data to table
-            insert = connection.prepareStatement("INSERT INTO transactions (id, fromAccount, toAccount, amount, currency, date) VALUES (?, ?, ?, ?, ?, ?)");
-            for (Transaction transaction : TransactionList) {
-                insert.setString(1, transaction.getId());
-                insert.setString(2, transaction.getWithdrawAccount());
-                insert.setString(3, transaction.getDepositAccount());
-                insert.setBigDecimal(4, transaction.getAmount());
-                insert.setString(5, transaction.getCurrency());
-                insert.setString(6, transaction.getDate() == null ? null : transaction.getDate().toString());
-                insert.executeUpdate();
-            }
-            log.info("Database Created");
-        } catch (SQLException e) {
-            log.error("Database Creation Error",e);
         }
+
+        // Transactions
+        DatabaseService.executeUpdate("CREATE TABLE transactions (id VARCHAR PRIMARY KEY, fromAccount VARCHAR(255), toAccount VARCHAR(255), amount DECIMAL(10,2), currency VARCHAR(3), date VARCHAR(255))");
+        url = "https://api.asep-strath.co.uk/api/team2/transactions?PageNumber=1&PageSize=1000";
+        HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).asObject(new GenericType<List<Transaction>>(){});
+        List<Transaction> TransactionList = transactionListResponse.getBody();
+
+        for (Transaction transaction : TransactionList) {
+            int status = DatabaseService.executeUpdate("INSERT INTO transactions (id, fromAccount, toAccount, amount, currency, date) VALUES (?, ?, ?, ?, ?, ?)",
+                    transaction.getId(),
+                    transaction.getWithdrawAccount(),
+                    transaction.getDepositAccount(),
+                    transaction.getAmount(),
+                    transaction.getCurrency(),
+                    // Inline if statement to check if date is null
+                    transaction.getDate() == null ? null : transaction.getDate().toString()
+            );
+            if (status == 0) {
+                log.error("Failed to insert transaction: " + transaction.getId());
+            }
+        }
+        log.info("Database Created");
     }
 }
