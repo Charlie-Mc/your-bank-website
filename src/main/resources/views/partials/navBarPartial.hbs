@@ -14,13 +14,24 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/accounts">Accounts</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Transactions
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/transactions">All Transactions</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/transactions/successful">Successful Transactions</a>
+                        <a class="dropdown-item" href="/transactions/fraud">Fraudulent Transactions</a>
+                    </div>
+                </li>
             </ul>
             <!-- Form for searching -->
-            <form class="form-inline ms-auto mt-md-4 mt-xl-0 mt-lg-0 mt-sm-4 mt-4">
+            <form class="form-inline ms-auto mt-md-4 mt-xl-0 mt-lg-0 mt-sm-4 mt-4" method="get" action="/accounts/search">
                 <div class="input-group nav-search">
-                    <input type="text" class="form-control input-nav-search" placeholder="Search the site" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <input type="text" class="form-control input-nav-search" name="name" id="name" placeholder="Search the site" aria-label="Recipient's username" aria-describedby="basic-addon2">
                     <div class="input-group-append">
-                        <button class="btn btn-nav-search" type="button">Search</button>
+                        <button class="btn btn-nav-search" type="button" >Search</button>
                     </div>
                 </div>
             </form>

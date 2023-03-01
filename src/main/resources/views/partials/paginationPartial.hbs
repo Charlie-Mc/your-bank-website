@@ -1,0 +1,28 @@
+<!-- Horizontally centered pagination bar-->
+<div class="container-md">
+    <ul class="nav justify-content-center">
+        {{#each pages}}
+        {{#if tPageMode}}
+            {{#if this.current}}
+                <li class="nav-item">
+                    <a class="nav-link text-primary text-decoration-underline" href="#">{{this.number}}</a>
+                </li>
+            {{else}}
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="/transactions?page={{this.number}}">{{this.number}}</a>
+                </li>
+            {{/if}}
+        {{else}}
+                {{#if this.current}}
+                    <li class="nav-item">
+                        <a class="nav-link text-primary text-decoration-underline" href="#">{{this.number}}</a>
+                    </li>
+                {{else}}
+                    <li class="nav-item">
+                        <a class="nav-link text-black" href="/accounts?page={{this.number}}">{{this.number}}</a>
+                    </li>
+                {{/if}}
+        {{/if}}
+        {{/each}}
+    </ul>
+</div>
