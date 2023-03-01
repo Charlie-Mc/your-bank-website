@@ -40,7 +40,7 @@ public class Account implements Serializable {
             balance = new BigDecimal(0);
         }
 
-        return balance;
+        return balance.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     public void withdraw(BigDecimal amount) throws ArithmeticException {
