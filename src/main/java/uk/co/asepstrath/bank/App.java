@@ -31,25 +31,23 @@ public class App extends Jooby {
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
 
-
         /*
         This will host any files in src/main/resources/assets on <host>/assets
         For example in the dice template (dice.hbs) it references "assets/dice.png" which is in resources/assets folder
          */
         assets("/assets/*", "/assets");
-        assets("/service_worker.js","/service_worker.js");
+        assets("/service_worker.js", "/service_worker.js");
 
         /*
         Now we set up our controllers and their dependencies
          */
         DataSource ds = require(DataSource.class);
         Logger lgr = getLog();
-        // Add Logger below this line when we implement it
 
         mvc(new HomeController());
         mvc(new UserController(ds, lgr));
         mvc(new AccountController(ds, lgr));
-        mvc(new TransactionController(lgr, ds));
+        mvc(new TransactionController(ds, lgr));
 
         /*
         Finally we register our application lifecycle methods
@@ -58,13 +56,10 @@ public class App extends Jooby {
         onStop(this::onStop);
     }
 
-    public static void main(final String[] args) { runApp(args, App::new); }
-
     /*
     This function will be called when the application starts up,
     it should be used to ensure that the DB is properly setup
      */
-
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
@@ -72,8 +67,9 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         String url = "https://api.asep-strath.co.uk/api/team2/accounts";
         // Open Connection to DB
-        createAndFillDatabase(ds,url,log);
+        createAndFillDatabase(ds, url, log);
     }
+
     /*
     This function will be called when the application shuts down
      */
@@ -96,7 +92,7 @@ public class App extends Jooby {
             // Insert some test data
             PreparedStatement insert = connection.prepareStatement("INSERT INTO users (id, name, balance, currency, accountType) VALUES (?, ?, ?, ?, ?)");
 
-            for(Account account : AccountList) {
+            for (Account account : AccountList) {
                 insert.setString(1, account.getId());
                 insert.setString(2, account.getName());
                 insert.setBigDecimal(3, account.getBalance());
@@ -124,7 +120,11 @@ public class App extends Jooby {
             }
             log.info("Database Created");
         } catch (SQLException e) {
-            log.error("Database Creation Error",e);
+            log.error("Database Creation Error", e);
         }
+    }
+
+    public static void main(final String[] args) {
+        runApp(args, App::new);
     }
 }
