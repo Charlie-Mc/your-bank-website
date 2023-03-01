@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App extends Jooby {
@@ -90,6 +91,19 @@ public class App extends Jooby {
             // Fetch data from API
             HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
             List<Account> AccountList = accountListResponse.getBody();
+
+            List<Account> filteredList = new ArrayList<>();
+            List<Account> deletedAccounts = new ArrayList<>();
+            for (Account account : AccountList) {
+                account.setName(account.getName().replace("'", "''"));
+                account.setName(account.getName().strip());
+                if (account.getName().length() <= 255 && !account.getName().trim().isEmpty() && !account.getName().matches(".*[<>\\&'\"/\\\\%#\\{\\}|\\^~\\[\\]`=;:\\?!\\*\\(\\)\\-\\+\\.\\$,\\@0123456789].*")) {
+                    filteredList.add(account);
+                }else {
+                    deletedAccounts.add(account);
+                }
+            }
+            AccountList = filteredList;
 
             // Create user table
             stmt.execute("CREATE TABLE users (id VARCHAR PRIMARY KEY, name VARCHAR(255), balance DECIMAL(10,2), currency VARCHAR(3), accountType VARCHAR(255))");

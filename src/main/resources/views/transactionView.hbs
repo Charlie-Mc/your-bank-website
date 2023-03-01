@@ -29,6 +29,8 @@
             <th scope="col" class="text-primary">Date</th>
             <th scope="col" class="text-primary">Amount</th>
             <th scope="col" class="text-primary">Currency</th>
+            <th scope="col" class="text-primary">Actions</th>
+
         </tr>
         </thead>
     {{#if normal }}
@@ -41,6 +43,9 @@
                 <td>{{date}}</td>
                 <td>£{{amount}}</td>
                 <td>{{currency}}</td>
+                <td>  <button type="submit" class="btn btn-outline-steel-teal w-50 align-bottom">
+                    repeat transaction
+                </button></td>
             </tr>
         {{/each}}
         </tbody>
@@ -54,6 +59,20 @@
                 <td>{{date}}</td>
                 <td>£{{amount}}</td>
                 <td>{{currency}}</td>
+
+                <td>
+                    <form action="http://localhost:8080/transations/repeat" method="POST">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="hidden" name="withdrawAccount" value="{{withdrawAccount}}">
+                    <input type="hidden" name="depositAccount" value="{{depositAccount}}">
+                    <input type="hidden" name="date" value="{{date}}">
+                    <input type="hidden" name="amount" value="{{amount}}">
+                    <input type="hidden" name="currency" value="{{currency}}">
+                    <button type="submit" class="btn btn-outline-steel-teal w-50 align-bottom">
+                    repeat transaction
+                </button>
+                    </form></td>
+
             </tr>
         {{/each}}
         </tbody>
@@ -67,6 +86,9 @@
                 <td>{{date}}</td>
                 <td>£{{amount}}</td>
                 <td>{{currency}}</td>
+                <td>  <button type="submit" class="btn btn-outline-steel-teal w-100 align-bottom">
+                    repeat transaction
+                </button></td>
             </tr>
         {{/each}}
         </tbody>
