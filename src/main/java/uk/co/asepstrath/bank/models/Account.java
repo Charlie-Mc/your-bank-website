@@ -2,6 +2,7 @@ package uk.co.asepstrath.bank.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class Account implements Serializable {
     private String id, name, currency, accountType;
@@ -17,6 +18,10 @@ public class Account implements Serializable {
 
     public Account(String id, String name) {
         this(id, name, new BigDecimal(0), "GBP", "Savings Account");
+    }
+
+    public Account() {
+        this(UUID.randomUUID().toString(), "John Smith");
     }
 
     public String getId() {
