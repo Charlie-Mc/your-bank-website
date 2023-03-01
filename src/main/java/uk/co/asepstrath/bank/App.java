@@ -108,7 +108,7 @@ public class App extends Jooby {
             // Transactions
             stmt.execute("CREATE TABLE transactions (id VARCHAR PRIMARY KEY, fromAccount VARCHAR(255), toAccount VARCHAR(255), amount DECIMAL(10,2), currency VARCHAR(3), date VARCHAR(255))");
             // Gather transactions from API
-            url = "https://api.asep-strath.co.uk/api/team2/transactions";
+            url = "https://api.asep-strath.co.uk/api/team2/transactions?PageNumber=1&PageSize=1000";
             HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).asObject(new GenericType<List<Transaction>>(){});
             List<Transaction> TransactionList = transactionListResponse.getBody();
             // Insert the data to table
