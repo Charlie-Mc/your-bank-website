@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.List;
 
 
+
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JoobyTest(App.class)
@@ -88,9 +90,13 @@ class IntegrationTest {
             } */
 
             // saving the expected values in a list to compare actualValues
+
+            App app = new App();
             HttpResponse<List<Account>> accountListResponse2 = Unirest.get("https://api.asep-strath.co.uk/api/team2/accounts").asObject(new GenericType<List<Account>>() {
             });
             List<Account> expectedValues = accountListResponse2.getBody();
+            // at some point we need to trun the app class into a mock object but I could not get this working
+            expectedValues = app.filter(expectedValues);
             expectedValues.sort((a, b) -> a.getName().compareTo(b.getName()));
 
             int i = 0;

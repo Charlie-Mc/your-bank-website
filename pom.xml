@@ -24,6 +24,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>io.jooby</groupId>
             <artifactId>jooby-netty</artifactId>
