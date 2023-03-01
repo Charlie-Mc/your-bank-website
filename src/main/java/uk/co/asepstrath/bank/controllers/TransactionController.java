@@ -23,12 +23,12 @@ import java.util.List;
 @Path("/transactions")
 public class TransactionController {
 
-    private final Logger logger;
     private final DataSource dataSource;
+    private final Logger logger;
 
-    public TransactionController(Logger logger, DataSource dataSource) {
-        this.logger = logger;
+    public TransactionController(DataSource dataSource, Logger logger) {
         this.dataSource = dataSource;
+        this.logger = logger;
     }
 
     /**
