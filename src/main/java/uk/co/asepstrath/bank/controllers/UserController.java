@@ -41,6 +41,7 @@ public class UserController {
 
         // Load accounts
         rs = DatabaseService.executeQuery("SELECT id, name, balance, currency, accountType FROM users;");
+        assert rs != null;
         accounts = DatabaseService.populateAccounts(rs);
 
         // Load pagination
@@ -83,6 +84,7 @@ public class UserController {
         // Load account
         ResultSet rs = DatabaseService.executeQuery("SELECT id, name, balance, currency, accountType FROM users WHERE id = ?;", user);
         try {
+            assert rs != null;
             if (rs.next()) {
                 account = new Account(
                         rs.getString("id"),
@@ -99,6 +101,7 @@ public class UserController {
 
         // Load transactions
         rs = DatabaseService.executeQuery("SELECT id, fromAccount, toAccount, amount, currency, date FROM transactions WHERE fromAccount = ? OR toAccount = ?;", user, user);
+        assert rs != null;
         transactions = DatabaseService.populateTransactions(rs);
 
         // Return the account and transactions
@@ -121,6 +124,7 @@ public class UserController {
 
         // Load accounts
         ResultSet rs = DatabaseService.executeQuery("SELECT id, name, balance, currency, accountType FROM users WHERE lower(name) LIKE ?", name + "%");
+        assert rs != null;
         accounts = DatabaseService.populateAccounts(rs);
 
         // Return the accounts

@@ -44,6 +44,8 @@ public class DatabaseService {
         // Initialise the connection
         Connection conn = init();
 
+        assert conn != null;
+
         // Prepare the statement
         PreparedStatement stmt;
 
@@ -67,6 +69,7 @@ public class DatabaseService {
         PreparedStatement stmt;
 
         try {
+            assert conn != null;
             stmt = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++) {
                 stmt.setObject(i + 1, params[i]);

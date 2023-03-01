@@ -45,6 +45,7 @@ public class TransactionController {
 
         // Load Transactions
         rs = DatabaseService.executeQuery("SELECT * FROM transactions;");
+        assert rs != null;
         transactions = DatabaseService.populateTransactions(rs);
 
         // Load Pagination
@@ -87,6 +88,7 @@ public class TransactionController {
 
         // Load Transactions
         ResultSet rs = DatabaseService.executeQuery("SELECT * FROM transactions;");
+        assert rs != null;
         transactions = DatabaseService.populateTransactions(rs);
 
         // Filter Transactions
@@ -134,6 +136,7 @@ public class TransactionController {
 
         // Exclude frauds
         ResultSet rs = DatabaseService.executeQuery("SELECT * FROM transactions;");
+        assert rs != null;
         transactions = DatabaseService.populateTransactions(rs);
         transactions.removeIf(transaction -> fraudList.contains(transaction.getId()));
 

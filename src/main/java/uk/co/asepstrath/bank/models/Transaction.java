@@ -15,7 +15,7 @@ public class Transaction {
     private String currency = null;
 
     // Static Variables
-    public static ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+    public static ArrayList<Transaction> transactions = new ArrayList<>();
 
 
     /**
@@ -140,7 +140,7 @@ public class Transaction {
      * @return ArrayList<Transaction>
      */
     public static ArrayList<Transaction> getWithdrawalsByAccount(String accountID) {
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getWithdrawAccount().equals(accountID) || transaction.getDepositAccount().equals(accountID)) {
                 transactions.add(transaction);
@@ -155,7 +155,7 @@ public class Transaction {
      * @return ArrayList<Transaction>
      */
     public static ArrayList<Transaction> getDepositsByAccount(String accountID) {
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
                 transactions.add(transaction);
@@ -170,7 +170,7 @@ public class Transaction {
      * @return ArrayList<Transaction>
      */
     public static ArrayList<Transaction> getTransactionsByAccount(String accountID) {
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
                 transactions.add(transaction);

@@ -49,6 +49,7 @@ public class App extends Jooby {
         mvc(new TransactionController(lgr, ds));
 
         // Initialise DatabaseService
+        //noinspection InstantiationOfUtilityClass
         new DatabaseService(ds, lgr);
 
         /*
