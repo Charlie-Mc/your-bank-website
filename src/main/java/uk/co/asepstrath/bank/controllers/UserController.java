@@ -80,7 +80,7 @@ public class UserController {
         }
         if (page != null) {
             // If the page is not null, return the accounts for that page
-            model.put("accounts", pages.get(page - 1).getAccounts());
+            model.put("accounts", pages.get(page - 1).getObjects());
             pages.get(page - 1).setCurrent(true);
             model.put("pageCount", pages.get(pages.size() - 1).count);
             // Set the active page;
@@ -92,7 +92,7 @@ public class UserController {
             return new Gson().toJson(accounts);
         }
         // If the page is null, return the first page
-        model.put("accounts", pages.get(0).getAccounts());
+        model.put("accounts", pages.get(0).getObjects());
         pages.get(0).setCurrent(true);
         model.put("pageCount", pages.get(pages.size() - 1).count);
         return new ModelAndView("account.hbs", model);
