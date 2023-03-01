@@ -54,6 +54,7 @@ public class DatabaseService {
             for (int i = 0; i < params.length; i++) {
                 stmt.setObject(i + 1, params[i]);
             }
+            stmt.close();
             return stmt.executeQuery();
         } catch (SQLException e) {
             _logger.error("Failed to prepare statement | " + e.getMessage());
@@ -74,6 +75,7 @@ public class DatabaseService {
             for (int i = 0; i < params.length; i++) {
                 stmt.setObject(i + 1, params[i]);
             }
+            stmt.close();
             return stmt.executeUpdate();
         } catch (SQLException e) {
             _logger.error("Failed to prepare statement | " + e.getMessage());
