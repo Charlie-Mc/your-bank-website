@@ -26,14 +26,14 @@ public class TransactionController {
     }
 
     /**
-     * Used to display successful transactions
+     * Used to display all transactions
      * @return ModelAndView
      */
     @GET
     public ModelAndView transactions() {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Transactions");
-        model.put("normal", "normal");
+        model.put("all", "all");
         ArrayList<Transaction> transactions = new ArrayList<>();
         // Logic Here
         try (Connection connection = dataSource.getConnection()) {
@@ -50,10 +50,11 @@ public class TransactionController {
                 ));
             }
             model.put("transactions", transactions);
+            model.put("tCount", transactions.size());
         } catch (SQLException e) {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Unable to connect to database", e);
         }
-        logger.info("Successful Transactions Loaded");
+        logger.info("All Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
     }
 
@@ -64,24 +65,29 @@ public class TransactionController {
     @GET("/fraud")
     public ModelAndView fraudulentTransactions() {
         HashMap<String, Object> model = new HashMap<>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
         model.put("title", "Fraudulent Transactions");
         model.put("fraud", "fraud");
+        model.put("tCount", transactions.size());
         // Logic Here
         logger.info("Fraudulent Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
     }
 
     /**
-     * Used to display all transactions
+     * Used to display non fraudulent transactions
      * @return ModelAndView
      */
-    @GET("/all")
-    public ModelAndView allTransactions() {
+    @GET("/successful")
+    public ModelAndView successfulTransactions() {
         HashMap<String, Object> model = new HashMap<>();
-        model.put("title", "All Transactions");
-        model.put("all", "all");
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        model.put("title", "Successful Transactions");
+        model.put("normal", "normal");
+        model.put("tCount", transactions.size());
         // Logic Here
-        logger.info("All Transactions Loaded");
+        logger.info("Successful Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
     }
 
