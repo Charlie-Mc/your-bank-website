@@ -207,8 +207,8 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction [amount=" + amount + ", currency=" + currency + ", date=" + date + ", depositAccount="
+        return "Transaction{amount=" + amount + ", currency=" + currency + ", date=" + date + ", depositAccount="
                 + depositAccount + ", id=" + id + ", priorBalance=" + priorBalance + ", postBalance=" + postBalance
-                + ", withdrawAccount=" + withdrawAccount + "]\n";
+                + ", withdrawAccount=" + withdrawAccount + "}";
     }
 }
