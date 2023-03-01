@@ -5,14 +5,20 @@ import io.jooby.StatusCode;
 import io.jooby.annotations.Path;
 import io.jooby.annotations.GET;
 import io.jooby.annotations.PathParam;
+import io.jooby.annotations.QueryParam;
 import io.jooby.exception.StatusCodeException;
+import kong.unirest.GenericType;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.models.Page;
 import uk.co.asepstrath.bank.models.Transaction;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Path("/transactions")
 public class TransactionController {
@@ -30,7 +36,7 @@ public class TransactionController {
      * @return ModelAndView
      */
     @GET
-    public ModelAndView transactions() {
+    public ModelAndView transactions(@QueryParam Integer page) {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Transactions");
         model.put("all", "all");
@@ -49,13 +55,34 @@ public class TransactionController {
                         resultSet.getString("currency")
                 ));
             }
-            model.put("transactions", transactions);
-            model.put("tCount", transactions.size());
+            ArrayList<Page> pages = new ArrayList<>();
+            int count = 0;
+            for (Transaction a : transactions) {
+                count++;
+                if (count % 100 == 0) {
+                    // Add page to the model
+                    Page p = new Page(new ArrayList<>(transactions.subList(count - 100, count)), count / 100);
+                    pages.add(p);
+                    model.put("pages", pages);
+                }
+            }
+            if (page != null) {
+                // If the page is not null, return the accounts for that page
+                model.put("transactions", pages.get(page - 1).getObjects());
+                model.put("tCount", pages.get(page - 1).getObjects().size());
+                pages.get(page - 1).setCurrent(true);
+                model.put("tPageMode", true);
+                // Set the active page;
+                return new ModelAndView("transactionView.hbs", model);
+            }
+            model.put("transactions", pages.get(0).getObjects());
+            pages.get(0).setCurrent(true);
+            model.put("tCount", pages.get(0).getObjects().size());
+            model.put("tPageMode", true);
+            return new ModelAndView("transactionView.hbs", model);
         } catch (SQLException e) {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Unable to connect to database", e);
         }
-        logger.info("All Transactions Loaded");
-        return new ModelAndView("transactionView.hbs", model);
     }
 
     /**
@@ -68,9 +95,11 @@ public class TransactionController {
         ArrayList<Transaction> transactions = new ArrayList<>();
         model.put("title", "Fraudulent Transactions");
         model.put("fraud", "fraud");
+        String url = "https://api.asep-strath.co.uk/api/team2/fraud";
+        HttpResponse<List<String>> FraudListResponse = Unirest.get(url).asObject(new GenericType<List<String>>() {});
+        List<String> fraudList = FraudListResponse.getBody();
+        logger.info("Fraud List: " + fraudList.toString());
         model.put("tCount", transactions.size());
-        // Logic Here
-        logger.info("Fraudulent Transactions Loaded");
         return new ModelAndView("transactionView.hbs", model);
     }
 
@@ -87,7 +116,7 @@ public class TransactionController {
         model.put("normal", "normal");
         model.put("tCount", transactions.size());
         // Logic Here
-        logger.info("Successful Transactions Loaded");
+        logger.info("Successful Transactions Loaded" );
         return new ModelAndView("transactionView.hbs", model);
     }
 
