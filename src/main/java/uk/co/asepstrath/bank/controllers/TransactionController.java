@@ -11,10 +11,6 @@ import org.slf4j.Logger;
 import uk.co.asepstrath.bank.models.Page;
 import uk.co.asepstrath.bank.models.Transaction;
 import uk.co.asepstrath.bank.services.DatabaseService;
-
-import javax.sql.DataSource;
-import javax.xml.crypto.Data;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,11 +41,13 @@ public class TransactionController {
 
         // Load Transactions
         transactions = db.selectAll(Transaction.class, "transactions");
+        logger.info("Loaded " + transactions.size() + " transactions");
 
         // Load Pagination
         ArrayList<Object> objects = new ArrayList<>(transactions);
         pages = Page.Paginate(objects, 100);
         model.put("pages", pages);
+        logger.info("Loaded " + pages.size() + " pages");
 
         // Load the selected page (If there is one)
         if (page != null) {
@@ -68,10 +66,10 @@ public class TransactionController {
         return new ModelAndView("transactionView.hbs", model);
     }
 
-    /*
     /**
      * Used to display fraudulent transactions
      * @return ModelAndView
+     */
     @GET("/fraud")
     public ModelAndView fraudulentTransactions(@QueryParam Integer page) {
         HashMap<String, Object> model = new HashMap<>();
@@ -85,18 +83,17 @@ public class TransactionController {
         List<String> fraudList = FraudListResponse.getBody();
 
         // Load Transactions
-        ResultSet rs = DatabaseService.executeQuery("SELECT * FROM transactions;");
-        assert rs != null;
-        transactions = DatabaseService.populateTransactions(rs);
+        transactions = db.selectAll(Transaction.class, "transactions");
 
-        // Filter Transactions
+        // Filter frauds
         transactions.removeIf(transaction -> !fraudList.contains(transaction.getId()));
-        model.put("transactions", transactions);
+        logger.info("Loaded " + transactions.size() + " fraudulent transactions");
 
         // Load Pagination
         ArrayList<Object> objects = new ArrayList<>(transactions);
         ArrayList<Page> pages = Page.Paginate(objects, 100);
         model.put("pages", pages);
+        logger.info("Loaded " + pages.size() + " pages");
 
         // Load the selected page (If there is one)
         if (page != null) {
@@ -117,6 +114,8 @@ public class TransactionController {
     /**
      * Used to display non fraudulent transactions
      * @return ModelAndView
+     *
+     */
     @GET("/successful")
     public ModelAndView successfulTransactions(@QueryParam Integer page) {
         HashMap<String, Object> model = new HashMap<>();
@@ -131,16 +130,18 @@ public class TransactionController {
         HttpResponse<List<String>> FraudListResponse = Unirest.get(url).accept("application/json").asObject(new GenericType<List<String>>() {});
         List<String> fraudList = FraudListResponse.getBody();
 
+        // Load Transactions
+        transactions = db.selectAll(Transaction.class, "transactions");
+
         // Exclude frauds
-        ResultSet rs = DatabaseService.executeQuery("SELECT * FROM transactions;");
-        assert rs != null;
-        transactions = DatabaseService.populateTransactions(rs);
         transactions.removeIf(transaction -> fraudList.contains(transaction.getId()));
+        logger.info("Loaded " + transactions.size() + " successful transactions");
 
         // Load Pagination
         ArrayList<Object> objects = new ArrayList<>(transactions);
         ArrayList<Page> pages = Page.Paginate(objects, 100);
         model.put("pages", pages);
+        logger.info("Loaded " + pages.size() + " pages");
 
         // Get page (If there is one)
         if (page != null) {
@@ -157,5 +158,5 @@ public class TransactionController {
         pages.get(0).setCurrent(true);
         model.put("tCount", pages.get(0).getObjects().size());
         return new ModelAndView("transactionView.hbs", model);
-    }*/
+    }
 }
