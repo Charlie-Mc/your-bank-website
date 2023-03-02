@@ -55,8 +55,15 @@ public class DatabaseService {
                     String currency = rs.getString("currency");
                     String accountType = rs.getString("accountType");
                     object = (E) new Account(id, name, new BigDecimal(balance), currency, accountType);
+                    System.out.println(object);
                 } else if (object instanceof Transaction) {
-
+                    String id = rs.getString("id");
+                    String fromAccount = rs.getString("fromAccount");
+                    String toAccount = rs.getString("toAccount");
+                    String amount = rs.getString("amount");
+                    String currency = rs.getString("currency");
+                    Date date = rs.getDate("date");
+                    object = (E) new Transaction(id, fromAccount, toAccount, date, new BigDecimal(amount), currency);
                 }
                 results.add(object);
             }
@@ -141,9 +148,6 @@ public class DatabaseService {
         tableName = clean(tableName);
         for (int i = 0; i < columns.length; i++) {
             columns[i] = clean(columns[i]);
-        }
-        for (int i = 0; i < values.length; i++) {
-            values[i] = clean(values[i]);
         }
 
         try (Connection conn = getConnection()) {
