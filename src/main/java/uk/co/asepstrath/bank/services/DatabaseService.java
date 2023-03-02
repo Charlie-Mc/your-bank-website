@@ -55,7 +55,6 @@ public class DatabaseService {
                     String currency = rs.getString("currency");
                     String accountType = rs.getString("accountType");
                     object = (E) new Account(id, name, new BigDecimal(balance), currency, accountType);
-                    System.out.println(object);
                 } else if (object instanceof Transaction) {
                     String id = rs.getString("id");
                     String fromAccount = rs.getString("fromAccount");
@@ -67,7 +66,6 @@ public class DatabaseService {
                 }
                 results.add(object);
             }
-
             conn.close();
             stmt.close();
             rs.close();
