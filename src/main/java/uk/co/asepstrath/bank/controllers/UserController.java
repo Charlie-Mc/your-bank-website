@@ -3,98 +3,69 @@ package uk.co.asepstrath.bank.controllers;
 import com.google.gson.Gson;
 import io.jooby.Context;
 import io.jooby.ModelAndView;
-import io.jooby.StatusCode;
 import io.jooby.annotations.*;
-import io.jooby.exception.StatusCodeException;
+
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.models.Account;
 import uk.co.asepstrath.bank.models.Page;
 import uk.co.asepstrath.bank.models.Transaction;
+import uk.co.asepstrath.bank.services.DatabaseService;
 
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 
 @Path("/accounts")
 public class UserController {
-
-
-
-    private final DataSource dataSource;
     private final Logger logger;
+    private final DatabaseService db;
 
-    // Save accounts to an arraylist to prevent constant database calls
-    private ArrayList<Account> accounts = new ArrayList<>();
-
-    public UserController(DataSource ds, Logger lgr) {
-        dataSource = ds;
+    public UserController(Logger lgr, DatabaseService data) {
         logger = lgr;
+        db = data;
     }
 
-    /**
-     * This is the revised list method
-     * @param format String
-     * @param ctx Context
-     * @param page Integer
-     * @return Object
-     */
-
     @GET
-    public Object RevisedList(@QueryParam String format, Context ctx, @QueryParam Integer page) {
+    public Object listAllAccounts(@QueryParam String format, Context ctx, @QueryParam Integer page) {
         HashMap<String, Object> model = new HashMap<>();
-        ArrayList<Page> pages = new ArrayList<>();
+        ArrayList<Page> Pages;
+        ArrayList<Account> accounts;
+        model.put("aPageMode", "accounts");
+
         // Add Page Title to the model
         model.put("title", "Accounts");
-        if (this.accounts.isEmpty()) {
-            // If the accounts arraylist is empty, load from database
-            try (Connection conn = dataSource.getConnection()) {
-                ArrayList<Account> accounts = new ArrayList<>();
-                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users");
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    BigDecimal temp = rs.getBigDecimal("balance");
-                    Account account = new Account(rs.getString("id"), rs.getString("name"), temp, rs.getString("currency"), rs.getString("accountType"));
-                    accounts.add(account);
-                }
-                this.accounts = accounts;
-                logger.info("Accounts Loaded: " + accounts.size());
-                stmt.close();
-            } catch (SQLException e) {
-                logger.error("Error connecting to database", e);
-                throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
-            }
-        }
+
+        // Load accounts
+        accounts = db.selectAll(Account.class, "users");
+
         // Load pagination
-        int count = 0;
-        for (Account a : accounts) {
-            count++;
-            if (count % 20 == 0) {
-                // Add page to the model
-                Page p = new Page(new ArrayList<>(this.accounts.subList(count - 20, count)), count / 20);
-                pages.add(p);
-                model.put("pages", pages);
-            }
-        }
+        ArrayList<Object> accountObjs = new ArrayList<>(accounts);
+        Pages = Page.Paginate(accountObjs, 20);
+        model.put("pages", Pages);
+
+        // Load the selected page (If there is one)
         if (page != null) {
             // If the page is not null, return the accounts for that page
-            model.put("accounts", pages.get(page - 1).getObjects());
-            pages.get(page - 1).setCurrent(true);
-            model.put("pageCount", pages.get(pages.size() - 1).count);
+            model.put("accounts", Pages.get(page - 1).getObjects());
+            Pages.get(page - 1).setCurrent(true);
+            model.put("pageCount", Pages.get(page - 1).count);
             // Set the active page;
             return new ModelAndView("account.hbs", model);
         }
+
+        // If the format is JSON, return the accounts in JSON
         if (format != null && format.equals("json")) {
             ctx.setResponseType("application/json");
             logger.info("Accounts Loaded in JSON: " + new Gson().toJson(accounts));
             return new Gson().toJson(accounts);
         }
+
         // If the page is null, return the first page
-        model.put("accounts", pages.get(0).getObjects());
-        pages.get(0).setCurrent(true);
-        model.put("pageCount", pages.get(pages.size() - 1).count);
+        model.put("accounts", Pages.get(0).getObjects());
+        Pages.get(0).setCurrent(true);
+        model.put("pageCount", Pages.get(0).count);
+
+        // Return the accounts
         return new ModelAndView("account.hbs", model);
     }
 
@@ -102,51 +73,18 @@ public class UserController {
     public Object account(@PathParam String user, @QueryParam String format, Context ctx) {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "View Account");
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
-            stmt.setString(1, user);
-            ResultSet rs =  stmt.executeQuery();
-            if (rs.next()) {
-                BigDecimal temp = rs.getBigDecimal("balance");
-                Account account = new Account(rs.getString("id"),rs.getString("name"), temp,rs.getString("currency"),rs.getString("accountType"));
-                if (format != null && format.equals("json")) {
-                    ctx.setResponseType("application/json");
-                    logger.info("Account Loaded in JSON: " + account);
-                    return new Gson().toJson(account);
-                }
-                model.put("account", account);
-                logger.info("Account Loaded: " + account);
-            } else {
-                stmt.close();
-                throw new StatusCodeException(StatusCode.NOT_FOUND, "Account not found");
-            }
-            // Now load transactions (All transactions for now)
-            PreparedStatement stmt2 = conn.prepareStatement("SELECT * FROM transactions WHERE fromAccount = ? OR toAccount = ?");
-            stmt2.setString(1, user);
-            stmt2.setString(2, user);
-            ResultSet rs2 = stmt2.executeQuery();
-            if (rs2.next()) {
-                do {
-                    transactions.add(
-                            new Transaction(
-                                    rs2.getString("id"),
-                                    rs2.getString("fromAccount"),
-                                    rs2.getString("toAccount"),
-                                    rs2.getDate("date"),
-                                    rs2.getBigDecimal("amount"),
-                                    rs2.getString("currency")
-                            )
-                    );
-                } while (rs2.next());
-            }
-            logger.info("Transactions Loaded: " + transactions);
-            model.put("transactions", transactions);
-            stmt.close();
-        } catch (SQLException e) {
-            logger.error("Error connecting to database", e);
-            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error connecting to database", e);
-        }
+        ArrayList<Transaction> transactions;
+        Account account;
+
+        // Load account
+        account = db.selectById(Account.class, "users", user);
+
+        // Load transactions
+        transactions = db.selectAll(Transaction.class, "transactions");
+
+        // Return the account and transactions
+        model.put("account", account);
+        model.put("transactions", transactions);
         return new ModelAndView("account.hbs", model);
     }
 
@@ -160,28 +98,16 @@ public class UserController {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Search Accounts");
         model.put("accountSearch", "account");
-        ArrayList<Account> accounts = new ArrayList<>();
-        // First find out if account exists
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT id, name, balance, currency, accountType FROM users WHERE lower(name) LIKE ?;");
-            statement.setString(1, name.toLowerCase() + "%");
-            ResultSet resultSet = statement.executeQuery();
-            // Check if count is greater than 0
-            while (resultSet.next()) {
-                accounts.add(new Account(
-                        resultSet.getString("id"),
-                        resultSet.getString("name"),
-                        resultSet.getBigDecimal("balance"),
-                        resultSet.getString("currency"),
-                        resultSet.getString("accountType")
-                ));
+        ArrayList<Object> accounts = new ArrayList<>();
+
+        // Load accounts
+        for (Account account : db.selectAll(Account.class, "users")) {
+            if (account.getName().toLowerCase().startsWith(name.toLowerCase())) {
+                accounts.add(account);
             }
-        } catch (SQLException e) {
-            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Unable to connect to database", e);
         }
-        if (accounts.size() == 0) {
-            throw new StatusCodeException(StatusCode.NOT_FOUND, "Account not found");
-        }
+
+        // Return the accounts
         model.put("accounts", accounts);
         model.put("pageCount", accounts.size());
         return new ModelAndView("account.hbs", model);

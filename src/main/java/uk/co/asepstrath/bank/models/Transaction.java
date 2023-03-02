@@ -16,7 +16,8 @@ public class Transaction {
     private String currency;
 
     // Static Variables
-    private static List<Transaction> transactions = new ArrayList<>();
+    public static final ArrayList<Transaction> transactions = new ArrayList<>();
+
 
     /**
      * Constructor for Transaction
@@ -55,6 +56,8 @@ public class Transaction {
     public String getId() {
         return id;
     }
+
+    public Transaction() {}
 
     /**
      * Get the withdrawal account
@@ -140,9 +143,9 @@ public class Transaction {
      * @param accountID String
      * @return ArrayList<Transaction>
      */
-    public static List<Transaction> getWithdrawalsByAccount(String accountID) {
-        List<Transaction> byAccount = new ArrayList<>();
-        for (Transaction transaction : transactions) {
+    public static ArrayList<Transaction> getWithdrawalsByAccount(String accountID) {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getWithdrawAccount().equals(accountID) || transaction.getDepositAccount().equals(accountID)) {
                 byAccount.add(transaction);
             }
@@ -155,9 +158,9 @@ public class Transaction {
      * @param accountID String
      * @return ArrayList<Transaction>
      */
-    public static List<Transaction> getDepositsByAccount(String accountID) {
-        List<Transaction> byAccount = new ArrayList<>();
-        for (Transaction transaction : transactions) {
+    public static ArrayList<Transaction> getDepositsByAccount(String accountID) {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
                 byAccount.add(transaction);
             }
@@ -170,9 +173,9 @@ public class Transaction {
      * @param accountID String
      * @return ArrayList<Transaction>
      */
-    public static List<Transaction> getTransactionsByAccount(String accountID) {
-        List<Transaction> byAccount = new ArrayList<>();
-        for (Transaction transaction : transactions) {
+    public static ArrayList<Transaction> getTransactionsByAccount(String accountID) {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
                 byAccount.add(transaction);
             }

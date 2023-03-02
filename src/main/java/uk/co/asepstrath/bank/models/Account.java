@@ -2,7 +2,7 @@ package uk.co.asepstrath.bank.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.UUID;
+import java.math.RoundingMode;
 
 public class Account implements Serializable {
     private String id, name, currency, accountType;
@@ -56,6 +56,13 @@ public class Account implements Serializable {
         balance = balance.subtract(amount);
     }
 
+    // getters and setters
+    public BigDecimal getBalance() {
+        if (balance == null) {
+            return null;
+        }
+        return balance.setScale(2, RoundingMode.HALF_UP);
+    }
     public String getCurrency() {
         return currency;
     }
