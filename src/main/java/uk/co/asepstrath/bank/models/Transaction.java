@@ -52,6 +52,8 @@ public class Transaction {
         this.amount = amount;
     }
 
+    public Transaction() {}
+
     /**
      * Get the withdrawal account
      * @return String
