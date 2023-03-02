@@ -7,7 +7,6 @@ import io.jooby.hikari.HikariModule;
 import kong.unirest.GenericType;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
-import org.h2.engine.Database;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.controllers.AccountController;
 import uk.co.asepstrath.bank.controllers.HomeController;
@@ -18,11 +17,10 @@ import uk.co.asepstrath.bank.models.Transaction;
 import uk.co.asepstrath.bank.services.DatabaseService;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.util.List;
 
 public class App extends Jooby {
-    private DatabaseService db;
+    private final DatabaseService db;
 
     {
         /*
