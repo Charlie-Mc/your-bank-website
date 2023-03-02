@@ -3,17 +3,14 @@ package uk.co.asepstrath.bank.controllers;
 import com.google.gson.Gson;
 import io.jooby.Context;
 import io.jooby.ModelAndView;
-import io.jooby.StatusCode;
 import io.jooby.annotations.*;
-import io.jooby.exception.StatusCodeException;
+
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.models.Account;
 import uk.co.asepstrath.bank.models.Page;
 import uk.co.asepstrath.bank.models.Transaction;
 import uk.co.asepstrath.bank.services.DatabaseService;
 
-import javax.sql.DataSource;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,7 +30,6 @@ public class UserController {
         HashMap<String, Object> model = new HashMap<>();
         ArrayList<Page> Pages;
         ArrayList<Account> accounts;
-        ResultSet rs;
         model.put("aPageMode", "accounts");
 
         // Add Page Title to the model
@@ -43,7 +39,7 @@ public class UserController {
         accounts = db.selectAll(Account.class, "users");
 
         // Load pagination
-        ArrayList<Object> accountObjs = new ArrayList<Object>(accounts);
+        ArrayList<Object> accountObjs = new ArrayList<>(accounts);
         Pages = Page.Paginate(accountObjs, 20);
         model.put("pages", Pages);
 
@@ -52,7 +48,7 @@ public class UserController {
             // If the page is not null, return the accounts for that page
             model.put("accounts", Pages.get(page - 1).getObjects());
             Pages.get(page - 1).setCurrent(true);
-            model.put("pageCount", Pages.get(Pages.size() - 1).count);
+            model.put("pageCount", Pages.get(page - 1).count);
             // Set the active page;
             return new ModelAndView("account.hbs", model);
         }
@@ -67,7 +63,7 @@ public class UserController {
         // If the page is null, return the first page
         model.put("accounts", Pages.get(0).getObjects());
         Pages.get(0).setCurrent(true);
-        model.put("pageCount", Pages.get(Pages.size() - 1).count);
+        model.put("pageCount", Pages.get(0).count);
 
         // Return the accounts
         return new ModelAndView("account.hbs", model);
@@ -106,7 +102,7 @@ public class UserController {
 
         // Load accounts
         for (Account account : db.selectAll(Account.class, "users")) {
-            if (account.getId().equals(name)) {
+            if (account.getName().toLowerCase().startsWith(name.toLowerCase())) {
                 accounts.add(account);
             }
         }
