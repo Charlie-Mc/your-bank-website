@@ -40,9 +40,7 @@ public class UserController {
         model.put("title", "Accounts");
 
         // Load accounts
-        rs = DatabaseService.executeQuery("SELECT id, name, balance, currency, accountType FROM users;");
-        assert rs != null;
-        accounts = DatabaseService.populateAccounts(rs);
+
 
         // Load pagination
         Pages = Page.Paginate(accounts, 20);
@@ -82,9 +80,8 @@ public class UserController {
         Account account = null;
 
         // Load account
-        ResultSet rs = DatabaseService.executeQuery("SELECT id, name, balance, currency, accountType FROM users WHERE id = ?;", user);
+
         try {
-            assert rs != null;
             if (rs.next()) {
                 account = new Account(
                         rs.getString("id"),
@@ -100,9 +97,7 @@ public class UserController {
         }
 
         // Load transactions
-        rs = DatabaseService.executeQuery("SELECT id, fromAccount, toAccount, amount, currency, date FROM transactions WHERE fromAccount = ? OR toAccount = ?;", user, user);
-        assert rs != null;
-        transactions = DatabaseService.populateTransactions(rs);
+
 
         // Return the account and transactions
         model.put("account", account);
@@ -123,9 +118,7 @@ public class UserController {
         ArrayList<Object> accounts;
 
         // Load accounts
-        ResultSet rs = DatabaseService.executeQuery("SELECT id, name, balance, currency, accountType FROM users WHERE lower(name) LIKE ?", name + "%");
-        assert rs != null;
-        accounts = DatabaseService.populateAccounts(rs);
+
 
         // Return the accounts
         model.put("accounts", accounts);
