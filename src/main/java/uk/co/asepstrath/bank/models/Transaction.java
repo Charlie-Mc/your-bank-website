@@ -3,6 +3,7 @@ package uk.co.asepstrath.bank.models;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Transaction {
     private String id;
@@ -12,7 +13,7 @@ public class Transaction {
     private BigDecimal postBalance;
     private Date date;
     private BigDecimal amount;
-    private String currency = null;
+    private String currency;
 
     // Static Variables
     public static final ArrayList<Transaction> transactions = new ArrayList<>();
@@ -45,11 +46,15 @@ public class Transaction {
      * @param amount BigDecimal
      */
     public Transaction(String id, String withdrawAccount, String depositAccount, Date date, BigDecimal amount) {
-        this.id = id;
-        this.withdrawAccount = withdrawAccount;
-        this.depositAccount = depositAccount;
-        this.date = date;
-        this.amount = amount;
+        this(id, withdrawAccount, depositAccount, date, amount, "GBP");
+    }
+
+    /**
+     * Get the transaction ID
+     * @return String
+     */
+    public String getId() {
+        return id;
     }
 
     public Transaction() {}
@@ -68,14 +73,6 @@ public class Transaction {
      */
     public String getDepositAccount() {
         return depositAccount;
-    }
-
-    /**
-     * Get the transaction ID
-     * @return String
-     */
-    public String getId() {
-        return id;
     }
 
     /**
@@ -103,12 +100,17 @@ public class Transaction {
     }
 
     /*
-
+     * Get the prior balance
+     * @return BigDecimal
      */
     public BigDecimal getPriorBalance() {
         return priorBalance;
     }
 
+    /*
+     * Get the post balance
+     * @return BigDecimal
+     */
     public BigDecimal getPostBalance() {
         return postBalance;
     }
@@ -118,7 +120,7 @@ public class Transaction {
      * Get all transactions
      * @return ArrayList<Transaction>
      */
-    public static ArrayList<Transaction> getTransactions() {
+    public static List<Transaction> getTransactions() {
         return transactions;
     }
 
@@ -145,10 +147,10 @@ public class Transaction {
         ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getWithdrawAccount().equals(accountID) || transaction.getDepositAccount().equals(accountID)) {
-                transactions.add(transaction);
+                byAccount.add(transaction);
             }
         }
-        return transactions;
+        return byAccount;
     }
 
     /**
@@ -160,10 +162,10 @@ public class Transaction {
         ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
-                transactions.add(transaction);
+                byAccount.add(transaction);
             }
         }
-        return transactions;
+        return byAccount;
     }
 
     /**
@@ -175,10 +177,10 @@ public class Transaction {
         ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
-                transactions.add(transaction);
+                byAccount.add(transaction);
             }
         }
-        return transactions;
+        return byAccount;
     }
 
     public boolean doTransaction(ArrayList<Account> accounts) {
@@ -208,8 +210,8 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction [amount=" + amount + ", currency=" + currency + ", date=" + date + ", depositAccount="
+        return "Transaction{amount=" + amount + ", currency=" + currency + ", date=" + date + ", depositAccount="
                 + depositAccount + ", id=" + id + ", priorBalance=" + priorBalance + ", postBalance=" + postBalance
-                + ", withdrawAccount=" + withdrawAccount + "]\n";
+                + ", withdrawAccount=" + withdrawAccount + "}";
     }
 }

@@ -6,8 +6,8 @@ public class Page {
     public ArrayList<Object> objects;
     public int number;
     public int count;
-
     public boolean isCurrent;
+
     public Page(ArrayList<Object> objects, int number) {
         this.objects = objects;
         this.number = number;
@@ -15,9 +15,7 @@ public class Page {
     }
 
     public Page(int number) {
-        this.objects = new ArrayList<>();
-        this.number = number;
-        this.count = 0;
+        this(new ArrayList<>(), number);
     }
 
     public ArrayList<Object> getObjects() {
@@ -65,9 +63,6 @@ public class Page {
 
     @Override
     public String toString() {
-        return "Page{" +
-                "objects=" + objects +
-                ", number=" + number +
-                '}';
+        return "Page{" + "objects=" + objects.toString() + ", number=" + number + "}";
     }
 }

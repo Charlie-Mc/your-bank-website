@@ -4,25 +4,28 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@SuppressWarnings("unused")
 public class Account implements Serializable {
-
+    private String id, name, currency, accountType;
     private BigDecimal balance;
-    private String name;
-    private String currency;
-    private String accountType;
-
-    private String id;
-
-    public Account() {
-    }
 
     public Account(String id, String name, BigDecimal balance, String currency, String accountType) {
-        this.balance = balance;
+        this.id = id;
         this.name = name;
+        this.balance = balance;
         this.currency = currency;
         this.accountType = accountType;
-        this.id = id;
+    }
+
+    public Account(String id, String name) {
+        this(id, name, new BigDecimal(0), "GBP", "Savings Account");
+    }
+
+    public Account() {
+        this(UUID.randomUUID().toString(), "John Smith");
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -37,12 +40,20 @@ public class Account implements Serializable {
         balance = balance.add(amount);
     }
 
+    public BigDecimal getBalance() {
+        if (balance == null) {
+            balance = new BigDecimal(0);
+        }
+
+        return balance.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
     public void withdraw(BigDecimal amount) throws ArithmeticException {
         if (balance.compareTo(amount) < 0) {
             throw new ArithmeticException("Insufficient funds");
         }
-        balance = balance.subtract(amount);
 
+        balance = balance.subtract(amount);
     }
 
     // getters and setters
@@ -68,15 +79,8 @@ public class Account implements Serializable {
         this.accountType = accountType;
     }
 
-    public String getId() {
-        return id;
-    }
-
-
     @Override
     public String toString() {
-        return "Name: " + this.name + " Balance: " + this.balance;
+        return "Name: " + this.name + " Balance: " + this.balance.toString();
     }
-
-
 }

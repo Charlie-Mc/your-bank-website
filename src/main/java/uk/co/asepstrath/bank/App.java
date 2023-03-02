@@ -43,7 +43,7 @@ public class App extends Jooby {
         For example in the dice template (dice.hbs) it references "assets/dice.png" which is in resources/assets folder
          */
         assets("/assets/*", "/assets");
-        assets("/service_worker.js","/service_worker.js");
+        assets("/service_worker.js", "/service_worker.js");
 
         /*
         Now we set up our controllers and their dependencies
@@ -67,18 +67,16 @@ public class App extends Jooby {
         onStop(this::onStop);
     }
 
-    public static void main(final String[] args) { runApp(args, App::new); }
-
     /*
     This function will be called when the application starts up,
     it should be used to ensure that the DB is properly setup
      */
-
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
         createDatabase(log);
     }
+
     /*
     This function will be called when the application shuts down
      */
@@ -158,5 +156,9 @@ public class App extends Jooby {
 
         log.info("Database Created" + " (" + count + " accounts inserted)");
         log.info("Database Created" + " (" + count2 + " transactions inserted)");
+    }
+
+    public static void main(final String[] args) {
+        runApp(args, App::new);
     }
 }
