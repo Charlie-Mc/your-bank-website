@@ -15,7 +15,7 @@ public class Transaction {
     private String currency = null;
 
     // Static Variables
-    public static ArrayList<Transaction> transactions = new ArrayList<>();
+    public static final ArrayList<Transaction> transactions = new ArrayList<>();
 
 
     /**
