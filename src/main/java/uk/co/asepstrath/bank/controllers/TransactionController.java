@@ -13,6 +13,7 @@ import uk.co.asepstrath.bank.models.Transaction;
 import uk.co.asepstrath.bank.services.DatabaseService;
 
 import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,11 +23,11 @@ import java.util.List;
 public class TransactionController {
 
     private final Logger logger;
-    private final DataSource dataSource;
+    private final DatabaseService db;
 
-    public TransactionController(Logger logger, DataSource dataSource) {
+    public TransactionController(Logger logger, DatabaseService data) {
         this.logger = logger;
-        this.dataSource = dataSource;
+        this.db = data;
     }
 
     /**
@@ -41,12 +42,9 @@ public class TransactionController {
         model.put("tPageMode", true);
         ArrayList<Transaction> transactions;
         ArrayList<Page> pages;
-        ResultSet rs;
 
         // Load Transactions
-        rs = DatabaseService.executeQuery("SELECT * FROM transactions;");
-        assert rs != null;
-        transactions = DatabaseService.populateTransactions(rs);
+        transactions = db.selectAll(Transaction.class, "transactions");
 
         // Load Pagination
         ArrayList<Object> objects = new ArrayList<>(transactions);
@@ -70,10 +68,10 @@ public class TransactionController {
         return new ModelAndView("transactionView.hbs", model);
     }
 
+    /*
     /**
      * Used to display fraudulent transactions
      * @return ModelAndView
-     */
     @GET("/fraud")
     public ModelAndView fraudulentTransactions(@QueryParam Integer page) {
         HashMap<String, Object> model = new HashMap<>();
@@ -119,7 +117,6 @@ public class TransactionController {
     /**
      * Used to display non fraudulent transactions
      * @return ModelAndView
-     */
     @GET("/successful")
     public ModelAndView successfulTransactions(@QueryParam Integer page) {
         HashMap<String, Object> model = new HashMap<>();
@@ -160,5 +157,5 @@ public class TransactionController {
         pages.get(0).setCurrent(true);
         model.put("tCount", pages.get(0).getObjects().size());
         return new ModelAndView("transactionView.hbs", model);
-    }
+    }*/
 }

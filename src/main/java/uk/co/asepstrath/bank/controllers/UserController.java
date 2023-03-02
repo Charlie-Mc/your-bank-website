@@ -20,19 +20,19 @@ import java.util.HashMap;
 
 @Path("/accounts")
 public class UserController {
-    private final DataSource dataSource;
     private final Logger logger;
+    private final DatabaseService db;
 
-    public UserController(DataSource ds, Logger lgr) {
-        dataSource = ds;
+    public UserController(Logger lgr, DatabaseService data) {
         logger = lgr;
+        db = data;
     }
 
     @GET
     public Object listAllAccounts(@QueryParam String format, Context ctx, @QueryParam Integer page) {
         HashMap<String, Object> model = new HashMap<>();
         ArrayList<Page> Pages;
-        ArrayList<Object> accounts;
+        ArrayList<Account> accounts;
         ResultSet rs;
         model.put("aPageMode", "accounts");
 
@@ -40,10 +40,11 @@ public class UserController {
         model.put("title", "Accounts");
 
         // Load accounts
-
+        accounts = db.selectAll(Account.class, "users");
 
         // Load pagination
-        Pages = Page.Paginate(accounts, 20);
+        ArrayList<Object> accountObjs = new ArrayList<Object>(accounts);
+        Pages = Page.Paginate(accountObjs, 20);
         model.put("pages", Pages);
 
         // Load the selected page (If there is one)
@@ -77,27 +78,13 @@ public class UserController {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "View Account");
         ArrayList<Transaction> transactions;
-        Account account = null;
+        Account account;
 
         // Load account
-
-        try {
-            if (rs.next()) {
-                account = new Account(
-                        rs.getString("id"),
-                        rs.getString("name"),
-                        rs.getBigDecimal("balance"),
-                        rs.getString("currency"),
-                        rs.getString("accountType")
-                );
-                logger.info("Account Loaded: " + new Gson().toJson(account));
-            }
-        } catch (SQLException e) {
-            throw new StatusCodeException(StatusCode.NOT_FOUND, "No Account Found", e);
-        }
+        account = db.selectById(Account.class, "users", user);
 
         // Load transactions
-
+        transactions = db.selectAll(Transaction.class, "transactions");
 
         // Return the account and transactions
         model.put("account", account);
@@ -115,10 +102,14 @@ public class UserController {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Search Accounts");
         model.put("accountSearch", "account");
-        ArrayList<Object> accounts;
+        ArrayList<Object> accounts = new ArrayList<>();
 
         // Load accounts
-
+        for (Account account : db.selectAll(Account.class, "users")) {
+            if (account.getId().equals(name)) {
+                accounts.add(account);
+            }
+        }
 
         // Return the accounts
         model.put("accounts", accounts);
