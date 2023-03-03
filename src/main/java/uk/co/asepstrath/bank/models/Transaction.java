@@ -147,10 +147,10 @@ public class Transaction {
         ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getWithdrawAccount().equals(accountID) || transaction.getDepositAccount().equals(accountID)) {
-                byAccount.add(transaction);
+                transactions.add(transaction);
             }
         }
-        return byAccount;
+        return transactions;
     }
 
     /**
@@ -162,10 +162,10 @@ public class Transaction {
         ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
-                byAccount.add(transaction);
+                transactions.add(transaction);
             }
         }
-        return byAccount;
+        return transactions;
     }
 
     /**
@@ -177,10 +177,10 @@ public class Transaction {
         ArrayList<Transaction> transactions = new ArrayList<>();
         for (Transaction transaction : Transaction.getTransactions()) {
             if (transaction.getDepositAccount().equals(accountID) || transaction.getWithdrawAccount().equals(accountID)) {
-                byAccount.add(transaction);
+                transactions.add(transaction);
             }
         }
-        return byAccount;
+        return transactions;
     }
 
     public boolean doTransaction(ArrayList<Account> accounts) {
