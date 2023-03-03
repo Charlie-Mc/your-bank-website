@@ -17,6 +17,7 @@ import uk.co.asepstrath.bank.models.Transaction;
 import uk.co.asepstrath.bank.services.DatabaseService;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App extends Jooby {
@@ -125,8 +126,11 @@ public class App extends Jooby {
         HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
         List<Account> AccountList = accountListResponse.getBody();
 
+        ArrayList<Account> accounts = db.cleanAccountInput(new ArrayList<>(AccountList));
+
+
         int count = 0;
-        for(Account account : AccountList){
+        for(Account account : accounts){
             success = db.insert("users", new String[]{"id", "name", "balance", "currency", "accountType"},
                     new String[]{account.getId(), account.getName(), account.getBalance().toString(),
                             account.getCurrency(), account.getAccountType()});
