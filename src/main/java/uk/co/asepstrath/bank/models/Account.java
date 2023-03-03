@@ -16,12 +16,7 @@ public class Account implements Serializable {
         this.accountType = accountType;
     }
 
-    public Account(String id, String name) {
-        this(id, name, new BigDecimal(0), "GBP", "Savings Account");
-    }
-
     public Account() {
-        this(UUID.randomUUID().toString(), "John Smith");
     }
 
     public String getId() {
@@ -40,13 +35,6 @@ public class Account implements Serializable {
         balance = balance.add(amount);
     }
 
-    public BigDecimal getBalance() {
-        if (balance == null) {
-            balance = new BigDecimal(0);
-        }
-
-        return balance.setScale(2, BigDecimal.ROUND_HALF_UP);
-    }
 
     public void withdraw(BigDecimal amount) throws ArithmeticException {
         if (balance.compareTo(amount) < 0) {
@@ -59,7 +47,7 @@ public class Account implements Serializable {
     // getters and setters
     public BigDecimal getBalance() {
         if (balance == null) {
-            return null;
+            return new BigDecimal("0.00");
         }
         return balance.setScale(2, RoundingMode.HALF_UP);
     }
@@ -81,6 +69,6 @@ public class Account implements Serializable {
 
     @Override
     public String toString() {
-        return "Name: " + this.name + " Balance: " + this.balance.toString();
+        return "Name: " + this.name + " Balance: " + this.balance;
     }
 }
