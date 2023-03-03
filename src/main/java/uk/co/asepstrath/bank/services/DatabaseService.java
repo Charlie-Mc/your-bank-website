@@ -255,4 +255,20 @@ public class DatabaseService {
             return null;
         }
     }
+
+    /**
+     * Clean an input
+     */
+    public ArrayList<Account> cleanAccountInput(ArrayList<Account> inputs) {
+        ArrayList<Account> cleanedInput = new ArrayList<>();
+
+        for (Account a : inputs) {
+            a.setName(a.getName().replace("'", "''"));
+            a.setName(clean(a.getName()));
+            if (a.getName().length() <= 255 && !a.getName().trim().isEmpty() && !a.getName().matches(".*[<>\\&'\"/\\\\%#\\{\\}|\\^~\\[\\]`=;:\\?!\\*\\(\\)\\-\\+\\.\\$,\\@0123456789].*")) {
+                cleanedInput.add(a);
+            }
+        }
+        return cleanedInput;
+    }
 }
