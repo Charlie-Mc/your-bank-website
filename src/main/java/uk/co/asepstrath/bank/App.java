@@ -8,10 +8,7 @@ import kong.unirest.GenericType;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.slf4j.Logger;
-import uk.co.asepstrath.bank.controllers.AccountController;
-import uk.co.asepstrath.bank.controllers.HomeController;
-import uk.co.asepstrath.bank.controllers.TransactionController;
-import uk.co.asepstrath.bank.controllers.UserController;
+import uk.co.asepstrath.bank.controllers.*;
 import uk.co.asepstrath.bank.models.Account;
 import uk.co.asepstrath.bank.models.Transaction;
 
@@ -48,6 +45,7 @@ public class App extends Jooby {
         mvc(new UserController(ds, lgr));
         mvc(new AccountController(ds, lgr));
         mvc(new TransactionController(ds, lgr));
+        mvc(new DocsController(ds, lgr));
 
         /*
         Finally we register our application lifecycle methods
