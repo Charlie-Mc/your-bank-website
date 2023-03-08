@@ -14,6 +14,7 @@ import uk.co.asepstrath.bank.controllers.TransactionController;
 import uk.co.asepstrath.bank.controllers.UserController;
 import uk.co.asepstrath.bank.models.Account;
 import uk.co.asepstrath.bank.models.Transaction;
+import uk.co.asepstrath.bank.services.DatabaseService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -24,7 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class App extends Jooby {
+    private final DatabaseService db;
+
     {
+        /*
+        This section is used for setting up the Jooby Framework modules
+         */
+        install(new UniRestExtension());
+        install(new HandlebarsModule());
+        install(new HikariModule("mem"));
+
         /*
         This section is used for setting up the Jooby Framework modules
          */
@@ -38,19 +48,22 @@ public class App extends Jooby {
         For example in the dice template (dice.hbs) it references "assets/dice.png" which is in resources/assets folder
          */
         assets("/assets/*", "/assets");
-        assets("/service_worker.js","/service_worker.js");
+        assets("/service_worker.js", "/service_worker.js");
 
         /*
         Now we set up our controllers and their dependencies
          */
         DataSource ds = require(DataSource.class);
         Logger lgr = getLog();
+        // Initialise DatabaseService
+        db = new DatabaseService(ds, lgr);
         // Add Logger below this line when we implement it
 
         mvc(new HomeController());
-        mvc(new UserController(ds, lgr));
+        mvc(new UserController(lgr, db));
         mvc(new AccountController(ds, lgr));
-        mvc(new TransactionController(lgr, ds));
+        mvc(new TransactionController(lgr, db));
+
 
         /*
         Finally we register our application lifecycle methods
@@ -59,22 +72,16 @@ public class App extends Jooby {
         onStop(this::onStop);
     }
 
-    public static void main(final String[] args) { runApp(args, App::new); }
-
     /*
     This function will be called when the application starts up,
     it should be used to ensure that the DB is properly setup
      */
-
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
-        // Fetch DB Source
-        DataSource ds = require(DataSource.class);
-        String url = "https://api.asep-strath.co.uk/api/team2/accounts";
-        // Open Connection to DB
-        createAndFillDatabase(ds,url,log);
+        createDatabase(log);
     }
+
     /*
     This function will be called when the application shuts down
      */
@@ -83,52 +90,87 @@ public class App extends Jooby {
         log.info("Shutting Down...");
     }
 
-    public void createAndFillDatabase(DataSource ds, String url, Logger log){
-        // create a database connection
-        try (Connection connection = ds.getConnection()) {
-            Statement stmt = connection.createStatement();
+    public void createDatabase(Logger log){
+        boolean success;
+        String[] columns;
+        String[] types;
+        String tableName;
+        String url;
+        log.info("Creating Database...");
 
-            // Fetch data from API
-            HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
-            List<Account> AccountList = accountListResponse.getBody();
+        // Accounts
+        tableName = "users";
+        columns = new String[]{"id", "name", "balance", "currency", "accountType"};
+        types = new String[]{"VARCHAR(255) PRIMARY KEY", "VARCHAR(255)", "DECIMAL(10,2)", "VARCHAR(3)", "VARCHAR(255)"};
+        success = db.createTable(tableName, columns, types);
+
+        if(success){
+            log.info("Created table " + tableName);
+        } else {
+            log.error("Failed to create table " + tableName);
+            System.exit(1);
+        }
+
+        // Transactions
+        tableName = "transactions";
+        columns = new String[]{"id", "fromAccount", "toAccount", "amount", "currency", "date"};
+        types = new String[]{"VARCHAR(255) PRIMARY KEY", "VARCHAR(255)", "VARCHAR(255)", "DECIMAL(10,2)", "VARCHAR(3)", "TIMESTAMP"};
+        success = db.createTable(tableName, columns, types);
+
+        if(success){
+            log.info("Created table " + tableName);
+        } else {
+            log.error("Failed to create table " + tableName);
+            System.exit(1);
+        }
+
+        // Populate Database
+        log.info("Populating Database...");
+        url = "https://api.asep-strath.co.uk/api/team2/accounts";
+        HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
+        List<Account> AccountList = accountListResponse.getBody();
+
+        ArrayList<Account> accounts = db.cleanAccountInput(new ArrayList<>(AccountList));
 
             AccountList = filter(AccountList);
 
             // Create user table
-            stmt.execute("CREATE TABLE users (id VARCHAR PRIMARY KEY, name VARCHAR(255), balance DECIMAL(10,2), currency VARCHAR(3), accountType VARCHAR(255))");
-            // Insert some test data
-            PreparedStatement insert = connection.prepareStatement("INSERT INTO users (id, name, balance, currency, accountType) VALUES (?, ?, ?, ?, ?)");
 
-            for(Account account : AccountList) {
-                insert.setString(1, account.getId());
-                insert.setString(2, account.getName());
-                insert.setBigDecimal(3, account.getBalance());
-                insert.setString(4, account.getCurrency());
-                insert.setString(5, account.getAccountType());
-                insert.executeUpdate();
+        int count = 0;
+        for(Account account : accounts){
+            success = db.insert("users", new String[]{"id", "name", "balance", "currency", "accountType"},
+                    new String[]{account.getId(), account.getName(), account.getBalance().toString(),
+                            account.getCurrency(), account.getAccountType()});
+            if(success){
+                count++;
+            } else {
+                log.error("Failed to insert account " + account.getId());
             }
-
-            // Transactions
-            stmt.execute("CREATE TABLE transactions (id VARCHAR PRIMARY KEY, fromAccount VARCHAR(255), toAccount VARCHAR(255), amount DECIMAL(10,2), currency VARCHAR(3), date VARCHAR(255))");
-            // Gather transactions from API
-            url = "https://api.asep-strath.co.uk/api/team2/transactions?PageNumber=1&PageSize=1000";
-            HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).asObject(new GenericType<List<Transaction>>(){});
-            List<Transaction> TransactionList = transactionListResponse.getBody();
-            // Insert the data to table
-            insert = connection.prepareStatement("INSERT INTO transactions (id, fromAccount, toAccount, amount, currency, date) VALUES (?, ?, ?, ?, ?, ?)");
-            for (Transaction transaction : TransactionList) {
-                insert.setString(1, transaction.getId());
-                insert.setString(2, transaction.getWithdrawAccount());
-                insert.setString(3, transaction.getDepositAccount());
-                insert.setBigDecimal(4, transaction.getAmount());
-                insert.setString(5, transaction.getCurrency());
-                insert.setString(6, transaction.getDate() == null ? null : transaction.getDate().toString());
-                insert.executeUpdate();
-            }
-            log.info("Database Created");
-        } catch (SQLException e) {
-            log.error("Database Creation Error",e);
         }
+
+        url = "https://api.asep-strath.co.uk/api/team2/transactions?page=1&pageSize=1000";
+        HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).accept("application/json").asObject(new GenericType<List<Transaction>>(){});
+        List<Transaction> TransactionList = transactionListResponse.getBody();
+
+        int count2 = 0;
+        for(Transaction transaction : TransactionList){
+            success = db.insert("transactions", new String[]{"id", "fromAccount", "toAccount", "amount", "currency", "date"},
+                    new String[]{transaction.getId(), transaction.getWithdrawAccount(), transaction.getDepositAccount(),
+                            transaction.getAmount().toString(), transaction.getCurrency(), transaction.getDate() == null ? null : transaction.getDate().toString()});
+            if(success){
+                count2++;
+            } else {
+                log.error("Failed to insert transaction " + transaction.getId());
+            }
+        }
+
+
+        log.info("Database Created" + " (" + count + " accounts inserted)");
+        log.info("Database Created" + " (" + count2 + " transactions inserted)");
+    }
+
+    public static void main(final String[] args) {
+        runApp(args, App::new);
     }
 
     public List<Account> filter(List<Account> AccountList){

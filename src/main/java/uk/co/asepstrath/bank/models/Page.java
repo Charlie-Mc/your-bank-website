@@ -6,8 +6,8 @@ public class Page {
     public ArrayList<Object> objects;
     public int number;
     public int count;
-
     public boolean isCurrent;
+
     public Page(ArrayList<Object> objects, int number) {
         this.objects = objects;
         this.number = number;
@@ -15,9 +15,7 @@ public class Page {
     }
 
     public Page(int number) {
-        this.objects = new ArrayList<>();
-        this.number = number;
-        this.count = 0;
+        this(new ArrayList<>(), number);
     }
 
     public ArrayList<Object> getObjects() {
@@ -45,11 +43,26 @@ public class Page {
         this.isCurrent = isCurrent;
     }
 
+    public static ArrayList<Page> Paginate(ArrayList<Object> objects, int pageSize) {
+        ArrayList<Page> pages = new ArrayList<>();
+        int count = 0;
+        for (Object a : objects) {
+            count++;
+            if (count % pageSize == 0) {
+                Page p = new Page(new ArrayList<>(objects.subList(count - pageSize, count)), count / pageSize);
+                pages.add(p);
+            }
+            // If we're at the end of the list, add the remaining objects to a new page
+            if (count == objects.size()) {
+                Page p = new Page(new ArrayList<>(objects.subList(count - (count % pageSize), count)), count / pageSize + 1);
+                pages.add(p);
+            }
+        }
+        return pages;
+    }
+
     @Override
     public String toString() {
-        return "Page{" +
-                "objects=" + objects +
-                ", number=" + number +
-                '}';
+        return "Page{" + "objects=" + objects.toString() + ", number=" + number + "}";
     }
 }

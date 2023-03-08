@@ -32,7 +32,7 @@ class UnitTest {
     @Test
     void newAccountValue() {
         Account a = new Account();
-        assertNull(a.getBalance());
+        assertEquals(new BigDecimal("0.00"), a.getBalance());
     }
 
     @Test
