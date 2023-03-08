@@ -139,7 +139,7 @@ public class TransactionController {
         return new ModelAndView("transactionView.hbs", model);
     }
 
- /*   @POST("/account/transfer/repeat")
+   @POST("/account/transfer/repeat")
     public ModelAndView repeatTransfer(String id, String withdrawAccount, String depositAccount, Date date, BigDecimal amount, String currency) {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "Repeat Transfer");
@@ -147,7 +147,7 @@ public class TransactionController {
         logger.info("Repeat Transfer Loaded");
         return new ModelAndView("transactionView.hbs", model);
     }
-*/
+
 
 
 
