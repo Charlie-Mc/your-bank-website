@@ -17,6 +17,10 @@ import uk.co.asepstrath.bank.models.Transaction;
 import uk.co.asepstrath.bank.services.DatabaseService;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,6 +132,9 @@ public class App extends Jooby {
 
         ArrayList<Account> accounts = db.cleanAccountInput(new ArrayList<>(AccountList));
 
+            AccountList = filter(AccountList);
+
+            // Create user table
 
         int count = 0;
         for(Account account : accounts){
@@ -164,5 +171,21 @@ public class App extends Jooby {
 
     public static void main(final String[] args) {
         runApp(args, App::new);
+    }
+
+    public List<Account> filter(List<Account> AccountList){
+
+        List<Account> filteredList = new ArrayList<>();
+        List<Account> deletedAccounts = new ArrayList<>();
+        for (Account account : AccountList) {
+            account.setName(account.getName().replace("'", "''"));
+            account.setName(account.getName().strip());
+            if (account.getName().length() <= 255 && !account.getName().trim().isEmpty() && !account.getName().matches(".*[<>\\&'\"/\\\\%#\\{\\}|\\^~\\[\\]`=;:\\?!\\*\\(\\)\\-\\+\\.\\$,\\@0123456789].*")) {
+                filteredList.add(account);
+            }else {
+                deletedAccounts.add(account);
+            }
+        }
+        return filteredList;
     }
 }

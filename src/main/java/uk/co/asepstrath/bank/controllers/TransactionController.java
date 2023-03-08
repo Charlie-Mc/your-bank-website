@@ -1,6 +1,7 @@
 package uk.co.asepstrath.bank.controllers;
 
 import io.jooby.ModelAndView;
+import io.jooby.annotations.POST;
 import io.jooby.annotations.Path;
 import io.jooby.annotations.GET;
 import io.jooby.annotations.QueryParam;
@@ -159,4 +160,17 @@ public class TransactionController {
         model.put("tCount", pages.get(0).getObjects().size());
         return new ModelAndView("transactionView.hbs", model);
     }
+
+ /*  @POST("/account/transfer/repeat")
+    public ModelAndView repeatTransfer(String id, String withdrawAccount, String depositAccount, Date date, BigDecimal amount, String currency) {
+        HashMap<String, Object> model = new HashMap<>();
+        model.put("title", "Repeat Transfer");
+        // Logic Here
+        logger.info("Repeat Transfer Loaded");
+        return new ModelAndView("transactionView.hbs", model);
+    }*/
+
+
+
+
 }
