@@ -10,16 +10,11 @@ import uk.co.asepstrath.bank.models.Route;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Path("/staff/swagger/docs")
 public class DocsController {
-    private final DataSource ds;
-    private final Logger lgr;
 
     public DocsController(DataSource ds, Logger lgr) {
-        this.ds = ds;
-        this.lgr = lgr;
         lgr.info("DocsController Created");
     }
 
@@ -28,10 +23,10 @@ public class DocsController {
         HashMap<String, Object> model = new HashMap<>();
         model.put("title", "API Documentation");
         List<Route> routes = new ArrayList<>();
-        routes.add(new Route("/api/team2/accounts", "ACCOUNT", "This fetches the accounts held by the bank", "200 = Bank account retrieved, 404 = Bank requested does not exist"));
-        routes.add(new Route("/api/team2/fraud", "FRAUD", "This fetches the fraudulent transactions reported by the Banking Regulators", "200 = Fraudulent transactions retrieved, 404 = Bank requested does not exist"));
-        routes.add(new Route("/api/team2/reversal", "REVERSAL", "This is too notify another bank of a transaction reversal", "200 = Reversal notification retrieved, 400 = An issue occurred, see error message to determine issue, 404 = Bank requested does not exist"));
-        routes.add(new Route("/api/team2/transaction", "TRANSACTION", "This fetches transactions from a bank", "200 = Transactions retrieved, 404 = Bank requested does not exist"));
+        routes.add(new Route("/api/Team2/accounts", "ACCOUNT", "This fetches the accounts held by the bank", "200 = Bank account retrieved, 404 = Bank requested does not exist"));
+        routes.add(new Route("/api/Team2/fraud", "FRAUD", "This fetches the fraudulent transactions reported by the Banking Regulators", "200 = Fraudulent transactions retrieved, 404 = Bank requested does not exist"));
+        routes.add(new Route("/api/Team2/reversal", "REVERSAL", "This is too notify another bank of a transaction reversal", "200 = Reversal notification retrieved, 400 = An issue occurred, see error message to determine issue, 404 = Bank requested does not exist"));
+        routes.add(new Route("/api/Team2/transaction", "TRANSACTION", "This fetches transactions from a bank", "200 = Transactions retrieved, 404 = Bank requested does not exist"));
         model.put("routes", routes);
         return new ModelAndView("docs.hbs", model);
     }
