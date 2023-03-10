@@ -8,11 +8,17 @@
                     <a class="nav-link text-primary text-decoration-underline" href="#">{{this.number}}</a>
                 </li>
             {{else}}
+                {{#if success}}
+                    <li class="nav-item">
+                        <a class="nav-link text-black" href="/transactions/successful?page={{this.number}}">{{this.number}}</a>
+                    </li>
+                {{else}}
                 <li class="nav-item">
                     <a class="nav-link text-black" href="/transactions?page={{this.number}}">{{this.number}}</a>
                 </li>
+                {{/if}}
             {{/if}}
-        {{else}}
+        {{else if aPageMode}}
                 {{#if this.current}}
                     <li class="nav-item">
                         <a class="nav-link text-primary text-decoration-underline" href="#">{{this.number}}</a>
