@@ -55,6 +55,7 @@ public class App extends Jooby {
         mvc(new UserController(lgr, db));
         mvc(new AccountController(ds, lgr));
         mvc(new TransactionController(lgr, db));
+        mvc(new DocsController(ds, lgr));
 
 
         /*
