@@ -23,16 +23,16 @@ public class Route {
 
     public String getColor() {
         switch (method) {
-            case "ACCOUNT":
-                return "bg-success";
-
-            case "TRANSACTION":
+            case "GET":
                 return "bg-primary";
 
-            case "FRAUD":
+            case "POST":
+                return "bg-success";
+
+            case "DELETE":
                 return "bg-danger";
 
-            case "REVERSAL":
+            case "PATCH":
                 return "bg-warning";
         }
 
