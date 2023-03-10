@@ -120,7 +120,7 @@ public class App extends Jooby {
         // Populate Database
         log.info("Populating Database...");
         url = "https://api.asep-strath.co.uk/api/team2/accounts";
-        HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
+        HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<>(){});
         List<Account> AccountList = accountListResponse.getBody();
 
         ArrayList<Account> accounts = db.cleanAccountInput(new ArrayList<>(AccountList));
@@ -142,7 +142,7 @@ public class App extends Jooby {
         }
 
         url = "https://api.asep-strath.co.uk/api/team2/transactions?page=1&pageSize=1000";
-        HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).accept("application/json").asObject(new GenericType<List<Transaction>>(){});
+        HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).accept("application/json").asObject(new GenericType<>(){});
         List<Transaction> TransactionList = transactionListResponse.getBody();
 
         int count2 = 0;
