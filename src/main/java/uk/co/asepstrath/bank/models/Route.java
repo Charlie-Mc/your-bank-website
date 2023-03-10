@@ -1,16 +1,17 @@
 package uk.co.asepstrath.bank.models;
 
-public class Route {
-    private final String route;
-    private final String method;
-    private final String info;
-    private final String responses;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    public Route(String route, String method, String info, String responses) {
+public class Route {
+    private final String route, method, info;
+    private ArrayList<Response> responses;
+
+    public Route(String route, String method, String info) {
         this.route = route;
         this.method = method;
         this.info = info;
-        this.responses = responses;
+        this.responses = new ArrayList<>();
     }
 
     public String getRoute() { return route; }
@@ -18,8 +19,6 @@ public class Route {
     public String getMethod() { return method; }
 
     public String getInfo() { return info; }
-
-    public String getResponses() { return responses; }
 
     public String getColor() {
         switch (method) {
@@ -37,5 +36,14 @@ public class Route {
         }
 
         return "bg-dark";
+    }
+
+    public Route addResponse(String code, String description) {
+        responses.add(new Response(code, description));
+        return this;
+    }
+
+    public ArrayList<Response> getResponses() {
+        return responses;
     }
 }
