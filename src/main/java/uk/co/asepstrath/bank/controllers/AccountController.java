@@ -16,12 +16,7 @@ import java.util.HashMap;
 @Path("/users")
 public class AccountController {
 
-    private final DataSource ds;
-    private final Logger lgr;
-
     public AccountController(DataSource ds, Logger lgr) {
-        this.ds = ds;
-        this.lgr = lgr;
         lgr.info("AccountController Created");
     }
 

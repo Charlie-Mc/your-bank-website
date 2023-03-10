@@ -38,7 +38,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Test clean() method has success")
-    public void test_clean_string_success() {
+    void test_clean_string_success() {
         String input = "     test\n";
         String expected = "test";
 
@@ -49,7 +49,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Get database connection")
-    public void test_get_connection_success() throws SQLException {
+    void test_get_connection_success() throws SQLException {
         Connection conn = mock(Connection.class);
         when(ds.getConnection()).thenReturn(conn);
 
@@ -60,7 +60,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Get a null database connection")
-    public void test_get_connection_null() throws SQLException {
+    void test_get_connection_null() throws SQLException {
         when(ds.getConnection()).thenReturn(null);
 
         Connection actual = db.getConnection();
@@ -70,7 +70,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Get all accounts")
-    public void testSelectAll() throws Exception {
+    void testSelectAll() throws Exception {
         // Set up test data
         ResultSet rs = mock(ResultSet.class);
         when(rs.next()).thenReturn(true).thenReturn(false);
@@ -100,7 +100,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Get all accounts with no results")
-    public void testSelectAllNoResults() throws Exception {
+    void testSelectAllNoResults() throws Exception {
         // Set up test data
         ResultSet rs = mock(ResultSet.class);
         when(rs.next()).thenReturn(false);
@@ -119,7 +119,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Get all accounts with an exception")
-    public void testSelectAllException() throws Exception {
+    void testSelectAllException() throws Exception {
         // Set up test data
         PreparedStatement stmt = mock(PreparedStatement.class);
         when(stmt.executeQuery()).thenReturn(null);
@@ -136,7 +136,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Get specific account")
-    public void test_selectById() throws SQLException {
+    void test_selectById() throws SQLException {
         PreparedStatement stmt = mock(PreparedStatement.class);
         ResultSet rs = mock(ResultSet.class);
         when(rs.next()).thenReturn(true).thenReturn(false);
@@ -162,7 +162,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Get specific account with no results")
-    public void test_selectByIdNoResults() throws SQLException {
+    void test_selectByIdNoResults() throws SQLException {
         PreparedStatement stmt = mock(PreparedStatement.class);
         ResultSet rs = mock(ResultSet.class);
         when(rs.next()).thenReturn(false);
@@ -179,7 +179,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Get specific account with an exception")
-    public void test_selectByIdException() throws SQLException {
+    void test_selectByIdException() throws SQLException {
         PreparedStatement stmt = mock(PreparedStatement.class);
         when(stmt.executeQuery()).thenReturn(null);
 
@@ -194,7 +194,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Insert account")
-    public void test_insert_account() throws SQLException {
+    void test_insert_account() throws SQLException {
         PreparedStatement stmt = mock(PreparedStatement.class);
         when(stmt.executeUpdate()).thenReturn(0);
 
@@ -213,7 +213,7 @@ class DatabaseServiceTest {
 
     @Test
     @DisplayName("Create table")
-    public void test_table_creation() throws SQLException {
+    void test_table_creation() throws SQLException {
         PreparedStatement stmt = mock(PreparedStatement.class);
         when(stmt.executeUpdate()).thenReturn(0);
 

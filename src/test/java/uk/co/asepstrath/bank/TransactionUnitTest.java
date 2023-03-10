@@ -10,9 +10,9 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TransactionUnitTest {
+class TransactionUnitTest {
     @Test
-    public void testTransaction() {
+    void testTransaction() {
         Transaction transaction = new Transaction("100",
                 "Test",
                 "Test2",
@@ -25,7 +25,7 @@ public class TransactionUnitTest {
     }
 
     @Test
-    public void test_get_transactions() {
+    void test_get_transactions() {
         Account account = new Account(
                 "101",
                 "Test",
@@ -61,7 +61,7 @@ public class TransactionUnitTest {
     }
 
     @Test
-    public void test_do_transaction() {
+    void test_do_transaction() {
         Account account = new Account(
                 "100",
                 "Test",
@@ -101,7 +101,7 @@ public class TransactionUnitTest {
     }
 
     @Test
-    public void test_failed_transaction() {
+    void test_failed_transaction() {
         Account account = new Account(
                 "100",
                 "Test",

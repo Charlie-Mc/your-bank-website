@@ -9,9 +9,8 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.controllers.*;
-import uk.co.asepstrath.bank.models.Account;
-import uk.co.asepstrath.bank.models.Transaction;
-import uk.co.asepstrath.bank.services.DatabaseService;
+import uk.co.asepstrath.bank.models.*;
+import uk.co.asepstrath.bank.services.*;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
