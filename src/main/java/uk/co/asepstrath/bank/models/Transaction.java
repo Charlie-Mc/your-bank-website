@@ -208,6 +208,12 @@ public class Transaction {
         }
     }
 
+    public void reverseTransaction() {
+
+    }
+
+
+
     @Override
     public String toString() {
         return "Transaction{amount=" + amount + ", currency=" + currency + ", date=" + date + ", depositAccount="
