@@ -183,17 +183,29 @@ public class Transaction {
         return transactions;
     }
 
-    public boolean doTransaction(ArrayList<Account> accounts) {
+    public Account findWithdrawAcc(ArrayList<Account> accounts) {
         Account withdrawAcc = null;
-        Account depositAcc = null;
         for (Account account : accounts) {
             if (account.getId().equals(this.getWithdrawAccount())) {
                 withdrawAcc = account;
             }
+        }
+        return withdrawAcc;
+    }
+
+    public Account findDepositAcc(ArrayList<Account> accounts) {
+        Account depositAcc = null;
+        for (Account account : accounts) {
             if (account.getId().equals(this.getDepositAccount())) {
                 depositAcc = account;
             }
         }
+        return depositAcc;
+    }
+    public boolean doTransaction(ArrayList<Account> accounts) {
+        Account withdrawAcc = findWithdrawAcc(accounts);
+        Account depositAcc = findDepositAcc(accounts);
+
         if (withdrawAcc == null || depositAcc == null) {
             return false;
         }
@@ -208,11 +220,23 @@ public class Transaction {
         }
     }
 
-    public void reverseTransaction() {
+    public boolean reverseTransaction(ArrayList<Account> accounts) {
+        Account withdrawAcc = findWithdrawAcc(accounts);
+        Account depositAcc = findDepositAcc(accounts);
 
+        if (withdrawAcc == null || depositAcc == null) {
+            return false;
+        }
+        this.priorBalance = depositAcc.getBalance();
+        this.postBalance = depositAcc.getBalance().subtract(this.amount);
+        try {
+            depositAcc.withdraw(this.amount);
+            withdrawAcc.deposit(this.amount);
+            return true;
+        } catch (ArithmeticException e) {
+            return false;
+        }
     }
-
-
 
     @Override
     public String toString() {
