@@ -94,3 +94,4 @@ class IntegrationTest {
         assertEquals(200, response.code());
     }
 }
+

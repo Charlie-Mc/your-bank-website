@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class App extends Jooby {
+
+    private  List<Account> AccountList = new ArrayList<>();
     private final DatabaseService db;
 
     {
@@ -124,10 +126,13 @@ public class App extends Jooby {
         log.info("Populating Database...");
         url = "https://api.asep-strath.co.uk/api/team2/accounts";
         HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
-        List<Account> AccountList = accountListResponse.getBody();
+        AccountList = accountListResponse.getBody();
 
         ArrayList<Account> accounts = db.cleanAccountInput(new ArrayList<>(AccountList));
 
+            AccountList = filter();
+
+            // Create user table
 
         int count = 0;
         for(Account account : accounts){
@@ -165,4 +170,22 @@ public class App extends Jooby {
     public static void main(final String[] args) {
         runApp(args, App::new);
     }
+
+    public List<Account> filter(){
+
+        List<Account> filteredList = new ArrayList<>();
+        List<Account> deletedAccounts = new ArrayList<>();
+        for (Account account : AccountList) {
+            account.setName(account.getName().replace("'", "''"));
+            account.setName(account.getName().strip());
+            if (account.getName().length() <= 255 && !account.getName().trim().isEmpty() && !account.getName().matches(".*[<>\\&'\"/\\\\%#\\{\\}|\\^~\\[\\]`=;:\\?!\\*\\(\\)\\-\\+\\.\\$,\\@0123456789].*")) {
+                filteredList.add(account);
+            }else {
+                deletedAccounts.add(account);
+            }
+        }
+        return filteredList;
+    }
+
+
 }
