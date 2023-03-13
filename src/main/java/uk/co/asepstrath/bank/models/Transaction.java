@@ -208,10 +208,35 @@ public class Transaction {
         }
     }
 
+    // due to the transaction api using fake accounts, this method is used to simulate a transaction
+    public void doFakeTransaction(ArrayList<Account> accounts) {
+        Account withdrawAcc = null;
+        Account depositAcc = null;
+        for (Account account : accounts) {
+            if (account.getId().equals(this.getWithdrawAccount())) {
+                withdrawAcc = account;
+            }
+            if (account.getId().equals(this.getDepositAccount())) {
+                depositAcc = account;
+            }
+        }
+
+        if (withdrawAcc != null && depositAcc == null) {
+            this.priorBalance = withdrawAcc.getBalance();
+            this.postBalance = withdrawAcc.getBalance().subtract(this.amount);
+            withdrawAcc.withdraw(this.amount);
+        }
+        if (withdrawAcc == null && depositAcc != null) {
+            depositAcc.deposit(this.amount);
+        }
+    }
+
+
     @Override
     public String toString() {
         return "Transaction{amount=" + amount + ", currency=" + currency + ", date=" + date + ", depositAccount="
                 + depositAccount + ", id=" + id + ", priorBalance=" + priorBalance + ", postBalance=" + postBalance
                 + ", withdrawAccount=" + withdrawAccount + "}";
     }
+
 }
