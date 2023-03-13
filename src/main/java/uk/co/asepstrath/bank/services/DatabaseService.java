@@ -271,4 +271,37 @@ public class DatabaseService {
         }
         return cleanedInput;
     }
+
+    public boolean delete(String tableName, String[] columns, String[] values) {
+        tableName = clean(tableName);
+        for (int i = 0; i < columns.length; i++) {
+            columns[i] = clean(columns[i]);
+        }
+
+        try (Connection conn = getConnection()) {
+            if (conn == null) {
+                return false;
+            }
+
+            StringBuilder query = new StringBuilder("DELETE FROM " + tableName + " WHERE ");
+            for (int i = 0; i < columns.length; i++) {
+                query.append(columns[i] + " = ?");
+                if (i != columns.length - 1) {
+                    query.append(" AND ");
+                }
+            }
+
+            PreparedStatement stmt = conn.prepareStatement(query.toString());
+            for (int i = 0; i < values.length; i++) {
+                stmt.setString(i + 1, values[i]);
+            }
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            this.logger.error("Error getting database connection: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

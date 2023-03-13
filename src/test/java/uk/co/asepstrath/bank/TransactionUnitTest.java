@@ -137,4 +137,105 @@ public class TransactionUnitTest {
         assertFalse(done);
     }
 
+    @Test
+    public void test_reverse_transaction() {
+        Account account = new Account(
+                "1",
+                "Test",
+                new BigDecimal("150.00"),
+                "CWP",
+                "Savings"
+        );
+        Account account2 = new Account(
+                "2",
+                "Test2",
+                new BigDecimal("160.00"),
+                "CWP",
+                "Savings"
+        );
+        Transaction transaction = new Transaction(
+                "100",
+                "2",
+                "1",
+                new Date(),
+                new BigDecimal("50.00"),
+                "CWP"
+        );
+
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(account);
+        accounts.add(account2);
+        BigDecimal balanceBefore = account.getBalance();
+        BigDecimal balance2Before = account2.getBalance();
+
+        boolean doTransaction = transaction.doTransaction(accounts);
+        assertNotEquals(balanceBefore, account.getBalance());
+        assertNotEquals(balance2Before, account2.getBalance());
+
+        if (doTransaction) {
+            transaction.reverseTransaction(accounts);
+        }
+        assertEquals(balanceBefore, account.getBalance());
+        assertEquals(balance2Before, account2.getBalance());
+    }
+
+    @Test
+    public void test_reverse_transaction_2() {
+        Account account = new Account(
+                "1",
+                "Test",
+                new BigDecimal("100.00"),
+                "CWP",
+                "Savings"
+        );
+        Account account2 = new Account(
+                "2",
+                "Test2",
+                new BigDecimal("200.00"),
+                "CWP",
+                "Savings"
+        );
+        Transaction transaction = new Transaction(
+                "100",
+                "2",
+                "1",
+                new Date(),
+                new BigDecimal("20.00"),
+                "CWP"
+        );
+        Transaction transaction2 = new Transaction(
+                "101",
+                "1",
+                "2",
+                new Date(),
+                new BigDecimal("50.00"),
+                "CWP"
+        );
+
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(account);
+        accounts.add(account2);
+        BigDecimal balanceBefore = account.getBalance();
+        BigDecimal balance2Before = account2.getBalance();
+
+        boolean doTransaction = transaction.doTransaction(accounts);
+        assertNotEquals(balanceBefore, account.getBalance());
+        assertNotEquals(balance2Before, account2.getBalance());
+
+        boolean doTransaction2 = transaction2.doTransaction(accounts);
+        assertNotEquals(balanceBefore, account.getBalance());
+        assertNotEquals(balance2Before, account2.getBalance());
+
+        if (doTransaction) {
+            transaction.reverseTransaction(accounts);
+        }
+        assertNotEquals(balanceBefore, account.getBalance());
+        assertNotEquals(balance2Before, account2.getBalance());
+
+        if (doTransaction2) {
+            transaction2.reverseTransaction(accounts);
+        }
+        assertEquals(balanceBefore, account.getBalance());
+        assertEquals(balance2Before, account2.getBalance());
+    }
 }
