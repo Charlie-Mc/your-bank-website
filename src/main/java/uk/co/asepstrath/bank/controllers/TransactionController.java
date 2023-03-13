@@ -1,20 +1,20 @@
 package uk.co.asepstrath.bank.controllers;
 
 import io.jooby.ModelAndView;
-import io.jooby.annotations.POST;
-import io.jooby.annotations.Path;
-import io.jooby.annotations.GET;
-import io.jooby.annotations.QueryParam;
+import io.jooby.annotations.*;
 import kong.unirest.GenericType;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.models.Account;
 import uk.co.asepstrath.bank.models.Page;
 import uk.co.asepstrath.bank.models.Transaction;
 import uk.co.asepstrath.bank.services.DatabaseService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+
+
+import java.math.BigDecimal;
+import java.util.*;
 
 @Path("/transactions")
 public class TransactionController {
@@ -161,16 +161,47 @@ public class TransactionController {
         return new ModelAndView("transactionView.hbs", model);
     }
 
- /*  @POST("/account/transfer/repeat")
-    public ModelAndView repeatTransfer(String id, String withdrawAccount, String depositAccount, Date date, BigDecimal amount, String currency) {
-        HashMap<String, Object> model = new HashMap<>();
-        model.put("title", "Repeat Transfer");
-        // Logic Here
-        logger.info("Repeat Transfer Loaded");
-        return new ModelAndView("transactionView.hbs", model);
-    }*/
+
+    // This is the method that is called when the user clicks the repeat button on the transaction page
+    @POST("/repeat")
+    public void repeatTransaction(@FormParam("id") String id, @FormParam("withdrawAccount") String withdrawAccount, @FormParam("depositAccount") String depositAccount, @FormParam("amount") BigDecimal amount, @FormParam("currency") String currency) {
+        Logger log;
+        Transaction transaction = new Transaction(id, withdrawAccount, depositAccount, null, amount, currency);
+
+        // gets the accounts from the api;
+        String url = "https://api.asep-strath.co.uk/api/team2/accounts";
+        HttpResponse<ArrayList<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<ArrayList<Account>>() {
+        });
+        ArrayList<Account> AccountList = accountListResponse.getBody();
+
+        boolean result = transaction.doTransaction(AccountList);
 
 
+        // if the transaction is not successful, it will do a fake transaction due to fake accounts present
+        if (!result) {
+            transaction.doFakeTransaction(AccountList);
+        }
 
+
+        // generates a random id for the transaction in the same format as the api
+        boolean success = false;
+        int count = 0;
+        UUID uuid = null;
+        String randomStringId;
+
+        while (!success) {
+            count++;
+            uuid = UUID.randomUUID();
+            randomStringId = uuid.toString();
+            success = db.insert("transactions", new String[]{"id", "fromAccount", "toAccount", "amount", "currency", "date"},
+                    new String[]{randomStringId, transaction.getWithdrawAccount(), transaction.getDepositAccount(),
+                            transaction.getAmount().toString(), transaction.getCurrency(), transaction.getDate() == null ? null : transaction.getDate().toString()});
+            if (count > 1000) {
+                logger.error("Failed to insert repeat transaction: " + transaction.getId());
+            }
+
+        }
+    }
 
 }
+
