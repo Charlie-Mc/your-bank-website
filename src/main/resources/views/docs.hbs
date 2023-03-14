@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+{{>partials/headPartial.hbs}}
+<body>
+{{>partials/navBarPartial.hbs}}
+<div class="container-md w-75 py-5">
+    <h1 class="m-0 p-4">Swagger API Docs</h1>
+    {{#each routes}}
+    <div class="m-0 p-4 d-block">
+        <span class="{{this.color}} text-light m-0 p-2 col-md-auto rounded d-inline">{{this.method}}</span>
+        <h6 class="m-0 p-2 d-inline">{{this.route}}</h6>
+        <p class="m-0 p-2 d-block">{{this.info}}</p>
+        <table class="px-2 d-block">
+            <tbody>
+                {{#each this.responses}}
+                <tr>
+                    <th>{{this.code}}</th>
+                    <td class="px-4">{{this.description}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    {{/each}}
+</div>
+{{>partials/footerPartial.hbs}}
+</body>
+</html>

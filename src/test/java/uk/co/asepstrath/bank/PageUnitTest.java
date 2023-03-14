@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PageUnitTest {
+class PageUnitTest {
 
     @Test
-    public void test_create_page() {
+    void test_create_page() {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add("test1");
         objects.add("test2");
@@ -24,7 +24,7 @@ public class PageUnitTest {
     }
 
     @Test
-    public void test_current_page() {
+    void test_current_page() {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add("test1");
         objects.add("test2");
@@ -38,7 +38,7 @@ public class PageUnitTest {
     }
 
     @Test
-    public void test_paginate() {
+    void test_paginate() {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add("test1");
         objects.add("test2");
@@ -53,7 +53,7 @@ public class PageUnitTest {
     }
 
     @Test
-    public void test_paginate_empty() {
+    void test_paginate_empty() {
         ArrayList<Object> objects = new ArrayList<>();
         ArrayList<Page> pages = Page.Paginate(objects, 2);
 
@@ -61,7 +61,7 @@ public class PageUnitTest {
     }
 
     @Test
-    public void test_paginate_single() {
+    void test_paginate_single() {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add("test1");
         ArrayList<Page> pages = Page.Paginate(objects, 2);

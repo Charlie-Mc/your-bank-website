@@ -8,13 +8,9 @@ import kong.unirest.GenericType;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.slf4j.Logger;
-import uk.co.asepstrath.bank.controllers.AccountController;
-import uk.co.asepstrath.bank.controllers.HomeController;
-import uk.co.asepstrath.bank.controllers.TransactionController;
-import uk.co.asepstrath.bank.controllers.UserController;
-import uk.co.asepstrath.bank.models.Account;
-import uk.co.asepstrath.bank.models.Transaction;
-import uk.co.asepstrath.bank.services.DatabaseService;
+import uk.co.asepstrath.bank.controllers.*;
+import uk.co.asepstrath.bank.models.*;
+import uk.co.asepstrath.bank.services.*;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -61,6 +57,7 @@ public class App extends Jooby {
         mvc(new UserController(lgr, db));
         mvc(new AccountController(ds, lgr));
         mvc(new TransactionController(lgr, db));
+        mvc(new DocsController(ds, lgr));
 
 
         /*
@@ -147,7 +144,7 @@ public class App extends Jooby {
         }
 
         url = "https://api.asep-strath.co.uk/api/team2/transactions?page=1&pageSize=1000";
-        HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).accept("application/json").asObject(new GenericType<List<Transaction>>(){});
+        HttpResponse<List<Transaction>> transactionListResponse = Unirest.get(url).accept("application/json").asObject(new GenericType<>(){});
         List<Transaction> TransactionList = transactionListResponse.getBody();
 
         int count2 = 0;
