@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class App extends Jooby {
+
+    private  List<Account> AccountList = new ArrayList<>();
     private final DatabaseService db;
 
     {
@@ -120,12 +122,12 @@ public class App extends Jooby {
         // Populate Database
         log.info("Populating Database...");
         url = "https://api.asep-strath.co.uk/api/team2/accounts";
-        HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<>(){});
-        List<Account> AccountList = accountListResponse.getBody();
+        HttpResponse<List<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<List<Account>>(){});
+        AccountList = accountListResponse.getBody();
 
         ArrayList<Account> accounts = db.cleanAccountInput(new ArrayList<>(AccountList));
 
-            AccountList = filter(AccountList);
+            AccountList = filter();
 
             // Create user table
 
@@ -166,7 +168,7 @@ public class App extends Jooby {
         runApp(args, App::new);
     }
 
-    public List<Account> filter(List<Account> AccountList){
+    public List<Account> filter(){
 
         List<Account> filteredList = new ArrayList<>();
         List<Account> deletedAccounts = new ArrayList<>();
@@ -181,4 +183,6 @@ public class App extends Jooby {
         }
         return filteredList;
     }
+
+
 }
