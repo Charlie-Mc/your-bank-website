@@ -179,7 +179,7 @@ public class TransactionController {
 
         // if the transaction is not successful, it will do a fake transaction due to fake accounts present
         if (!result) {
-            transaction.doFakeTransaction(AccountList);
+          //  transaction.doFakeTransaction(AccountList);
         }
 
 
@@ -202,6 +202,24 @@ public class TransactionController {
 
         }
     }
+
+    @POST("/reverse")
+    public void reverseTransaction(@FormParam("id") String id, @FormParam("withdrawAccount") String withdrawAccount, @FormParam("depositAccount") String depositAccount, @FormParam("amount") BigDecimal amount, @FormParam("currency") String currency) {
+        Logger log;
+        Transaction transaction = new Transaction(id, withdrawAccount, depositAccount, null, amount, currency);
+
+        // gets the accounts from the api;
+        String url = "https://api.asep-strath.co.uk/api/team2/accounts";
+        HttpResponse<ArrayList<Account>> accountListResponse = Unirest.get(url).asObject(new GenericType<ArrayList<Account>>() {
+        });
+        ArrayList<Account> accounts = accountListResponse.getBody();
+
+        transaction.reverseTransaction(accounts);
+        boolean deleteSuccess = db.delete("transactions", new String[]{"id"}, new String[]{id});
+
+
+    }
+
 
 }
 

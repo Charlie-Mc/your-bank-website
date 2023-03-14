@@ -56,6 +56,14 @@
                         </button>
                     </form>
                 </td>
+                <td>
+                    <form id="undo-transaction-form" action="/transactions/reverse" method="POST">
+                        <input type="hidden" name="id" value="{{id}}">
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            Undo Transaction
+                        </button>
+                    </form>
+                </td>
             </tr>
         {{/each}}
         </tbody>
@@ -78,6 +86,14 @@
                         <input type="hidden" name="currency" value="{{currency}}">
                         <button type="submit" class="btn btn-outline-steel-teal w-100 align-bottom">
                             repeat transaction
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <form id="undo-transaction-form" action="/transactions/reverse" method="POST">
+                        <input type="hidden" name="id" value="{{id}}">
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            Undo Transaction
                         </button>
                     </form>
                 </td>
@@ -106,6 +122,14 @@
                         </button>
                     </form>
                 </td>
+                <td>
+                    <form id="undo-transaction-form" action="/transactions/reverse" method="POST">
+                        <input type="hidden" name="id" value="{{id}}">
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            Undo Transaction
+                        </button>
+                    </form>
+                </td>
             </tr>
         {{/each}}
         </tbody>
@@ -131,6 +155,24 @@
                         alert("Transaction repeated successfully");
                     } else {
                         alert("Transaction failed");
+                    }
+                });
+    });
+
+    const form2 = document.getElementById('undo-transaction-form');
+    form2.addEventListener('submit', function(event) {
+        event.preventDefault(); // prevent the default behavior of the form
+        const formData = new FormData(form2); // create a new FormData object with the form data
+        fetch(form2.action, {
+            method: form2.method,
+            body: formData
+        }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.success) {
+                        alert("Transaction undone successfully");
+                    } else {
+                        alert("Transaction undo failed");
                     }
                 });
     });

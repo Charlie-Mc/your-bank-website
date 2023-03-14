@@ -1,6 +1,12 @@
 package uk.co.asepstrath.bank.models;
 
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -183,17 +189,29 @@ public class Transaction {
         return transactions;
     }
 
-    public boolean doTransaction(ArrayList<Account> accounts) {
+    public Account findWithdrawAcc(ArrayList<Account> accounts) {
         Account withdrawAcc = null;
-        Account depositAcc = null;
         for (Account account : accounts) {
             if (account.getId().equals(this.getWithdrawAccount())) {
                 withdrawAcc = account;
             }
+        }
+        return withdrawAcc;
+    }
+
+    public Account findDepositAcc(ArrayList<Account> accounts) {
+        Account depositAcc = null;
+        for (Account account : accounts) {
             if (account.getId().equals(this.getDepositAccount())) {
                 depositAcc = account;
             }
         }
+        return depositAcc;
+    }
+    public boolean doTransaction(ArrayList<Account> accounts) {
+        Account withdrawAcc = findWithdrawAcc(accounts);
+        Account depositAcc = findDepositAcc(accounts);
+
         if (withdrawAcc == null || depositAcc == null) {
             return false;
         }
@@ -208,29 +226,46 @@ public class Transaction {
         }
     }
 
-    // due to the transaction api using fake accounts, this method is used to simulate a transaction
-    public void doFakeTransaction(ArrayList<Account> accounts) {
-        Account withdrawAcc = null;
-        Account depositAcc = null;
-        for (Account account : accounts) {
-            if (account.getId().equals(this.getWithdrawAccount())) {
-                withdrawAcc = account;
-            }
-            if (account.getId().equals(this.getDepositAccount())) {
-                depositAcc = account;
-            }
-        }
+    public boolean reverseTransaction(ArrayList<Account> accounts) {
+        Account withdrawAcc = findWithdrawAcc(accounts);
+        Account depositAcc = findDepositAcc(accounts);
 
-        if (withdrawAcc != null && depositAcc == null) {
-            this.priorBalance = withdrawAcc.getBalance();
-            this.postBalance = withdrawAcc.getBalance().subtract(this.amount);
-            withdrawAcc.withdraw(this.amount);
+        if (withdrawAcc == null || depositAcc == null) {
+            return false;
         }
-        if (withdrawAcc == null && depositAcc != null) {
-            depositAcc.deposit(this.amount);
+        this.priorBalance = depositAcc.getBalance();
+        this.postBalance = depositAcc.getBalance().subtract(this.amount);
+        try {
+            depositAcc.withdraw(this.amount);
+            withdrawAcc.deposit(this.amount);
+            return true;
+        } catch (ArithmeticException e) {
+            return false;
         }
     }
 
+    public boolean requestReversal(ArrayList<Account> accounts) throws IOException {
+        URL url = new URL("http://api.asep-strath.co.uk/api/bank2/reversal");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
+
+        JsonObject payload = new JsonObject();
+        payload.addProperty("id", this.getId());
+
+        OutputStream os = con.getOutputStream();
+        os.write(payload.toString().getBytes());
+        os.flush();
+        os.close();
+
+        int responseCode = con.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            reverseTransaction(accounts);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     public String toString() {
@@ -238,5 +273,4 @@ public class Transaction {
                 + depositAccount + ", id=" + id + ", priorBalance=" + priorBalance + ", postBalance=" + postBalance
                 + ", withdrawAccount=" + withdrawAccount + "}";
     }
-
 }
